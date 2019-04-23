@@ -1,0 +1,186 @@
+<!-- 
+  文件库
+  @author: AndyPan
+  @createdata: 2018年11月29日15:04:13
+ -->
+
+<div class="file-lib-wrap">
+  <div class="file-lib-container">
+    <div class="lib-treemenu-wrap">
+      <div class="tree-menu-hd">
+        <label (click)="refreshTree()">目录</label>
+        <button nz-button [nzType]="'primary'" [nzSize]="'small'" *ngIf="status.pageAuthorty.FileDirectorysCreate"
+          (click)="addCatalog()" style="float: right;margin-top: 16px;margin-right: 10px;">
+          添加目录
+        </button>
+      </div>
+      <div class="tree-menu-bd">
+        <a href="javascript:;" class="menu-item-database" (click)="showAllFiles()">全部文件</a>
+        <!-- nodeItemOverflow="overflow-140" tree item 宽度超过140，显示省略号 -->
+        <component-tree-edit nodeItemOverflow="overflow-140" [isShowType]="false" [isSelectFirst]="false"
+          [InputAuthorty]="status.pageAuthorty" [treeNodes]="status.treeNodes" (onAddSave)="onAddSave($event)"
+          (onEditSave)="onEditSave($event)" (onDeleteSave)="onDeleteSave($event)" (onSelected)="onSelected($event)"
+          (onUnSelected)="onUnSelected($event)" #treeEdit></component-tree-edit>
+      </div>
+    </div>
+    <div class="lib-list-wrap">
+      <nz-spin [nzTip]='operationStatus.loadingTip' [nzSpinning]="operationStatus.isLoading" style="height: 100%;">
+        <div class="lib-list-hd">
+          <span class="btn-group" [ngClass]="status.uploadFile.uploadBtnStatus ? '' : 'disabled'">
+            <!-- <a href="javascript:;" class="hd-btn-item" (click)="batchDownload()">
+              <i nz-icon type="download"></i>批量下载
+            </a> -->
+            <a href="javascript:;" class="hd-btn-item" *ngIf="status.pageAuthorty.FilesDelete" (click)="batchDelete()">
+              <i nz-icon type="delete"></i>批量删除
+            </a>
+            <!-- <a href="javascript:;" class="hd-btn-item" (click)="moveGatalog()">
+              <i nz-icon type="folder"></i>移动目录
+            </a> -->
+            <!-- <a href="javascript:;" class="hd-btn-item" (click)="moveFile()">
+              <i nz-icon type="export"></i>移动文件
+            </a> -->
+            <a href="javascript:;" class="hd-btn-item" (click)="makeQRCode()">
+              <i nz-icon type="qrcode"></i>生成二维码
+            </a>
+          </span>
+          <button nz-button class="btn-upload-right" [disabled]="!status.uploadFile.uploadBtnStatus"
+            [nzType]="'primary'" *ngIf="status.pageAuthorty.FilesUp" (click)="uploadFile()">
+            上传文件
+          </button>
+          <span class="common-search-box" style="float: right;margin-right: 10px;">
+            <nz-input-group nzSearch [nzSuffix]="suffixButton">
+              <input type="text" nz-input placeholder="关键字搜索" (keyup)="keyupEvent($event)"
+                [(ngModel)]="operationStatus.filter" />
+            </nz-input-group>
+            <ng-template #suffixButton>
+              <button nz-button nzType="primary" nzSearch (click)="searchEvent()">搜索</button>
+            </ng-template>
+          </span>
+        </div>
+        <div class="lib-list-cont">
+          <div class="table-cont">
+            <nz-table #basicTable [nzData]="status.dataList" [nzShowPagination]="false">
+              <thead (nzSortChange)="dataSort($event)" nzSingleSort>
+                <tr>
+                  <th nzShowCheckbox [(nzChecked)]="operationStatus.allChecked"
+                    [nzIndeterminate]="operationStatus.indeterminate" (nzCheckedChange)="checkAll($event)"></th>
+                  <th width="400px">名称</th>
+                  <th>类型</th>
+                  <th>大小</th>
+                  <th>上传人</th>
+                  <th nzShowSort nzSortKey="updateDate" width="200px">上传时间</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr *ngFor="let data of status.dataList;let idx = index" (mouseover)="mouseoverRowsEvent($event, idx)"
+                  (mouseout)="mouseoutRowsEvent($event, idx)">
+                  <td nzShowCheckbox [(nzChecked)]="data.checked" (nzCheckedChange)="refreshCheckboxStatus()"></td>
+                  <td [ngClass]="data.hover" [title]='data.name'>
+                    <span class="name-wrap" style="width: 234px;">
+                      {{data.name | NullPlaceholderPipe}}
+                    </span>
+                    <span class="tools">
+                      <a href="javascript:;" (click)="preview(data)" title="预览" *ngIf="status.pageAuthorty.FilesReview">
+                        <i nz-icon type="eye" theme="outline"></i>
+                      </a>
+                      <a href="javascript:;" (click)="download(data)" title="下载" *ngIf="status.pageAuthorty.FilesDown">
+                        <i nz-icon type="download"></i>
+                      </a>
+                      <a href="javascript:;" (click)="editFile(data)" title="编辑" *ngIf="status.pageAuthorty.FilesEdit">
+                        <i nz-icon type="form"></i>
+                      </a>
+                      <a href="javascript:;" (click)="deleteFile(data)" title="删除"
+                        *ngIf="status.pageAuthorty.FilesDelete && (status.roleCode=='Admin'|| status.roleCode =='Project'||(status.roleCode=='Technology' && data.creatorUserId == status.userId ))">
+                        <i nz-icon type="delete"></i>
+                      </a>
+                    </span>
+                  </td>
+                  <td>{{data.extension?data.extension:"-"}}</td>
+                  <td>{{data.size | FileSizePipe}}</td>
+                  <td>{{data.creatorUserName | NullPlaceholderPipe}}</td>
+                  <td>{{data.creationTime | DateTransformPipe}}</td>
+                </tr>
+              </tbody>
+            </nz-table>
+          </div>
+          <div class="pager">
+            <!-- 重写后的分页组件 -->
+            <components-custom-pager [pageIndex]="operationStatus.pager.pageIndex"
+              [totalCount]="operationStatus.pager.totalCount" [pageSize]="operationStatus.pager.pageSize"
+              [totalPages]="operationStatus.pager.totalPages" [showQuickJumper]="true"
+              (onPageIndexChange)="pageIndexChange($event)" #customPager></components-custom-pager>
+          </div>
+        </div>
+      </nz-spin>
+    </div>
+  </div>
+
+  <!-- 弹出框（新增、编辑、文件上传） -->
+  <nz-modal [(nzVisible)]="operationStatus.modal.operationModalStatus" [nzContent]="addModalContent"
+    [nzFooter]="operationStatus.modal.isShowModalFooter ? addModalFooter : null"
+    (nzOnCancel)="operationCloseModal('operationModalStatus')" [nzTitle]="operationStatus.modal.operationModalTitle">
+    <ng-template #addModalContent>
+      <components-custom-forms [formData]="operationStatus.modal.customFormInfoModel"
+        [disabledForm]="operationStatus.modelDisabled" (onUploadFileSuccess)="uploadFileSuccess($event)" #customForms>
+      </components-custom-forms>
+    </ng-template>
+    <ng-template #addModalFooter>
+      <button nz-button *ngIf="operationStatus.modal.sureButton"
+        [nzType]="operationStatus.modal.sureButton.type || 'primary'" [disabled]="operationStatus.modelDisabled"
+        (click)="operationSubmitModal()">
+        {{operationStatus.modelDisabled ? operationStatus.modal.sureButton.submitText : operationStatus.modal.sureButton.text}}
+      </button>
+      <button nz-button *ngIf="operationStatus.modal.resetButton"
+        [nzType]="operationStatus.modal.resetButton.type || 'default'" [disabled]="operationStatus.modelDisabled"
+        (click)="operationResetModal()">
+        {{operationStatus.modelDisabled ? operationStatus.modal.resetButton.submitText : operationStatus.modal.resetButton.text}}
+      </button>
+    </ng-template>
+  </nz-modal>
+
+  <!-- 弹出框（预览文件） -->
+  <nz-modal [(nzVisible)]="status.preview.isVisible" [nzContent]="previewModalContent" [nzFooter]="previewModalFooter"
+    [nzWidth]="status.preview.width" (nzOnCancel)="status.preview.isVisible = !status.preview.isVisible"
+    [nzTitle]="status.preview.title">
+    <ng-template #previewModalContent>
+      <iframe class="preview-iframe" #previewFrame></iframe>
+    </ng-template>
+    <ng-template #previewModalFooter>
+      <!-- <button nz-button
+        [nzType]="'primary'"
+        (click)="operationShare()">分享</button> -->
+      <button nz-button [nzType]="'primary'" (click)="operationDownload()">下载</button>
+    </ng-template>
+  </nz-modal>
+  <!-- 弹出框（二维码） -->
+  <nz-modal [(nzVisible)]="status.qrCode.isVisible" [nzContent]="qrCodeModalContent" [nzFooter]="qrCodeModalFooter"
+    [nzWidth]="status.qrCode.width" (nzOnCancel)="status.qrCode.isVisible = !status.qrCode.isVisible"
+    [nzTitle]="status.qrCode.title">
+    <ng-template #qrCodeModalContent>
+      <div class="qr-code-wrap">
+        <a href="javascript:;" class="qr-code-item" *ngFor="let item of status.qrCode.data" [title]="item.name">
+          <!-- 生成文件路径二维码 -->
+          <qrcode [qrdata]="item.url" [size]="256" level="M"></qrcode>
+          <label class="qr-code-text">{{item.name}}</label>
+        </a>
+      </div>
+    </ng-template>
+    <ng-template #qrCodeModalFooter>
+      <button nz-button [nzType]="'primary'" (click)="status.qrCode.isVisible = !status.qrCode.isVisible">确定</button>
+    </ng-template>
+  </nz-modal>
+
+  <!-- 弹出框（移动文件） -->
+  <!-- <nz-modal [(nzVisible)]="status.treeSelect.isVisible" [nzContent]="addModalContent"
+    [nzFooter]="operationStatus.modal.isShowModalFooter ? addModalFooter : null"
+    (nzOnCancel)="status.treeSelect.isVisible = !status.treeSelect.isVisible" [nzTitle]="status.treeSelect  ">
+    树形选择组件
+    <ng-template #treeSelectContent>
+      <nz-tree-select style="width: 250px" [nzDefaultExpandedKeys]="expandKeys" [nzNodes]="status.treeNodes"
+        nzShowSearch nzPlaceHolder="请选择你要移动到的目录" [(ngModel)]="value" (ngModelChange)="onChange($event)">
+      </nz-tree-select>`
+    </ng-template>
+  </nz-modal> -->
+
+  
+</div>

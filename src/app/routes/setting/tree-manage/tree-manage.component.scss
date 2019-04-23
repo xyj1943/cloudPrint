@@ -1,0 +1,168 @@
+/**
+ * 结构树管理页面模板-scss
+ * @author AndyPan
+ * @createdate 2018年11月30日15:20:26
+ */
+
+ @import '../../../sass/base.scss';
+
+.tree-manage-main{
+    height: 100%;
+    margin: 0;
+    padding: 30px;
+    .common-main-cont{
+        margin-top: -70px;
+        height: 100%;
+    }
+}
+
+.tree-manage-empty{
+    position: absolute;
+    left: 0;
+    top: 100px;
+}
+
+.tree-manage-wrap{
+    position: absolute;
+    left: 0;
+    top: 100px;
+    bottom:30px;
+    width: 810px;
+    background: $WhiteColor;
+    // overflow: hidden;
+    @include border-radius(5px);
+    @include box-shadow($BoxShadow);
+    border: 1px solid $ColorD3;
+
+    $HDHeight: 48px;
+    $FTHeight: 48px;
+    .tree-hd{
+        height: $HDHeight;
+        border-bottom: 1px solid $ColorD3;
+        @include vertical($WhiteColor, $ColorF8);
+        padding: 0 10px;
+        .tree-hd-title{
+            float: left;
+            line-height: $HDHeight;
+            cursor: pointer;
+            &:hover{
+                color: #419FE5;
+            }
+        }
+        .tree-hd-tool{
+            float: right;
+            line-height: $HDHeight;
+        }
+    }
+    .tree-bd{
+        position: absolute;
+        top: $HDHeight + 2px;
+        left: 0;
+        right: 0;
+        bottom: $FTHeight + 2px;
+        // bottom: 0;
+        overflow: auto;
+        @include scrollbar();
+    }
+    .tree-ft{
+        // display: none;
+        height: $FTHeight;
+        border-top: 1px solid $ColorD3;
+        position: absolute;
+        left: 0;
+        bottom: 0;
+        right: 0;
+        padding: 0 10px;
+        .tree-ft-tool{
+            float: right;
+            line-height: $FTHeight;
+
+            button{
+                margin-left: 10px;
+            }
+        }
+    }
+    .tree-model-type{
+        width: 200px;
+        height: auto;
+        position: absolute;
+        top: 0;
+        right: -250px;
+    }
+}
+
+::ng-deep .ant-spin-nested-loading{
+    height: 100%;
+    .ant-spin-container{
+        height: 100%;
+    }
+}
+
+
+:host ::ng-deep .ant-tree {
+    overflow: hidden;
+    padding-left: 12px;
+    // margin: 0 -24px;
+    // padding: 0 24px;
+
+}
+
+$nodeHeight: 40px;
+:host ::ng-deep .ant-tree li {
+    padding: 4px 0 0 0;
+    position: relative;
+    span.ant-tree-switcher{
+        height: $nodeHeight;
+        line-height: $nodeHeight + 4px;
+        &.ant-tree-switcher_close, &.ant-tree-switcher_open {
+            .ng-star-inserted{
+                font-size: 20px;
+            }
+        }
+    }
+    span.folder-name{
+        .ng-star-inserted{
+            transform:rotate(90deg);
+            -ms-transform:rotate(90deg); 	/* IE 9 */
+            -moz-transform:rotate(90deg); 	/* Firefox */
+            -webkit-transform:rotate(90deg); /* Safari 和 Chrome */
+            -o-transform:rotate(90deg); 	/* Opera */
+        }
+    }
+}
+
+.custom-node {
+    cursor: pointer;
+    line-height: $nodeHeight;
+    height: $nodeHeight;
+    margin-left: 4px;
+    display: inline-block;
+    margin: 0 -1000px;
+    padding: 0 1000px;
+    color: $PrimaryFontColor;
+    .folder-tools{
+        position: absolute;
+        right: 0px;
+        top: 5px;
+        @include transition(all .3s ease);
+        @include opacity(0);
+
+        i{
+            margin-right: 18px;
+        }
+    }
+
+    &:hover, &.hover{
+        .folder-tools{
+            @include opacity(1);
+        }
+    }
+    
+    &.active {
+        background: $AuxiliaryColor;
+        // color: #fff;
+        .folder-tools{
+            @include opacity(1);
+        }
+    }
+}

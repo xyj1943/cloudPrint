@@ -1,0 +1,86 @@
+/**
+ * 汽车类型页面模板-scss
+ * @author AndyPan
+ * @createdate 2018年11月28日09:17:39
+ */
+
+ @import '../../sass/base.scss';
+
+.car-type-wrap{
+    width: $CommonWrapWidth;
+    margin: 0 auto;
+
+    .hd-search-box{
+        height: 80px;
+        margin-top: 10px;
+        position: relative;
+        .search-box{
+            position: absolute;
+            top: 50%;
+            right: 0;
+            margin-top: -18px;
+        }
+    }
+    .car-type-cont{
+        $FilterWidth: 230px;
+        position: relative;
+        @include clear-fix();
+        &.car-type-manage{
+            .car-type-filter{
+                display: none;
+            }
+            .car-type-list{
+                margin-left: 0;
+            }
+        }
+        .car-type-filter{
+            width: $FilterWidth;
+            @include box-shadow($BoxShadow);
+            @include border-radius(5px);
+            float: left;
+            background: $WhiteColor;
+            .filter-btn-wrap{
+                margin: 20px auto;
+                .btn-filter{
+                    margin: 0 12px;
+                }
+            }
+        }
+        .car-type-list{
+            margin-left: $FilterWidth + 20px;
+            padding: 30px;
+            border: 1px solid $BorderColor;
+            @include box-shadow($BoxShadow);
+            @include border-radius(5px);
+            background: $WhiteColor;
+            $space: 16px;
+            .list-breadcrumb-hd{
+                padding-bottom: $space;
+                text-align: left;
+                color: $AuxiliaryFontColor;
+                border-bottom: 1px solid $BorderColor;
+                .btn-new-cartype{
+                    float: right;
+                    text-decoration: none;
+                    color: $PrimaryColor;
+                    position: relative;
+                    padding-left: 30px;
+                    i{
+                        font-size: 24px;
+                        position: absolute;
+                        left: 0;
+                        top: -1px;
+                    }
+                }
+            }
+            .list-container{
+                margin-top: $space;
+                padding-bottom: $space;
+                border-bottom: 1px solid $BorderColor;
+                
+            }
+            
+        }
+
+    }
+}

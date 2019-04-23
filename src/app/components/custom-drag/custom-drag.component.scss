@@ -1,0 +1,43 @@
+/**
+ * 拖拽-scss
+ * @author AndyPan
+ * @createdate 2019年2月13日15:11:01
+ */
+ 
+ @import '../../sass/base.scss';
+
+.custom-drag{
+    position: relative;
+    -webkit-touch-callout: none; /* iOS Safari */
+    -webkit-user-select: none; /* Chrome/Safari/Opera */
+    -khtml-user-select: none; /* Konqueror */
+    -moz-user-select: none; /* Firefox */
+    -ms-user-select: none; /* Internet Explorer/Edge */
+    user-select: none; /* Non-prefixed version, currentlynot supported by any browser */
+
+    .drag-clone-target{
+        @include opacity();
+        border:1px dashed $Color6E;
+        position: fixed;
+        // left: 10px;
+        z-index: 10;
+        background: rgba($color: $ColorBC, $alpha: 0.8);
+        @include border-radius();
+    }
+    .drag-split-target{
+        width: 100%;
+        height: 5px;
+        background: #007ACC;
+        margin: 5px auto;
+    }
+    .drag-mask-target{
+        position: absolute;
+        width: 100%;
+        height: 100%;
+        left: 0;
+        top: 0;
+        z-index: 9;
+        background: rgba(255, 255, 255, 0.2);
+    }
+
+}

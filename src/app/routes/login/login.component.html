@@ -1,0 +1,57 @@
+<div class="login-wrap">
+  <div class="login">
+    <div class="login-hd">
+      <span class="login-info-en">LIGHTWEIGHT DATA INFORMATION PLATFORM FOR PASSENGER CARS</span>
+      <span class="login-info-zh">乘用车轻量化数据信息平台</span>
+    </div>
+
+    <div class="login-cont">
+      <span class="login-title">SIGN IN</span>
+      <div class="login-item">
+        <span class="login-item-input">
+          <i class="icon-login" nz-icon [type]="'user'"></i>
+          <span class="input-wrap">
+            <input type="text" class="form-inp" nz-input 
+              [(ngModel)]="status.loginModal.userName" 
+              (keyup)="keyupEvent($event)"
+              [disabled]="status.loginStatus || status.tokenStatus"
+              placeholder="请输入用户名" 
+              #UserNameInput >
+          </span>
+        </span>
+      </div>
+      <div class="login-item">
+        <span class="login-item-input">
+          <i class="icon-login" nz-icon [type]="'unlock'"></i>
+          <span class="input-wrap">
+            <input type="password" class="form-inp" nz-input 
+              [(ngModel)]="status.loginModal.userPwd" 
+              (keyup)="keyupEvent($event)"
+              [disabled]="status.loginStatus || status.tokenStatus"
+              placeholder="为空时密码与帐号一致"
+              #UserPwdInput >
+          </span>
+        </span>
+      </div>
+      <div class="login-item">
+        <nz-form-control>
+          <label nz-checkbox [(ngModel)]="status.rememberMe">
+            <span>记住密码</span>
+          </label>
+        </nz-form-control>
+      </div>
+      <div class="login-item">
+        <button nz-button nzType="primary" 
+          class="btn-login"
+          [disabled]="status.loginStatus || status.tokenStatus"
+          (click)="doLogin()">{{status.loginStatus ? '登录中...' : '登录'}}</button>
+      </div>
+    </div>
+    <div class="login-copyright">
+      <span class="font">中国汽车工程研究院股份有限公司&nbsp;|&nbsp;版权所有&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;技术支持：筑智建&nbsp;|&nbsp;ARchGL&nbsp;&nbsp;</span>
+      <span class="logo_white"></span>
+      <span class="font">蜘蛛引擎</span>
+    </div>
+    <span class="logo_white"></span>
+  </div>
+</div>

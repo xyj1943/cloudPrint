@@ -1,0 +1,61 @@
+<!-- 
+  树形操作组件
+  @author: AndyPan
+  @createdata: 2018年12月3日09:15:24
+ -->
+
+<div class="tree-edit-wrap">
+  <nz-spin [nzTip]='operationStatus.loadingTip' [nzSpinning]="operationStatus.isLoading" style="min-height: 100px;">
+    <nz-tree
+      #treeCom
+      nzShowIcon="true"
+      *ngIf="status.reloadTree"
+      [nzDraggable]="isDraggable"
+      [nzData]="status.treeNodes"
+      (nzClick)="activeNode($event)">
+      <ng-template #nzTreeTemplate let-node>
+        <div class="custom-node" [id]="node.key" [class.active]="activedNode?.key===node.key" [draggable]="isDraggable">
+          <span class="folder-name" [ngClass]="nodeItemOverflow" [title]="node.title">
+            {{node.title}}
+            <!-- 已绑定的图标 -->
+            <i nz-icon *ngIf="node.origin.icon" [type]="node.origin.icon"></i>
+          </span>
+          <span class="folder-tools">
+            <i nz-icon type="form" title="编辑" (click)="editCatalog(node)" *ngIf="status.pageAuthorty.Edit || status.pageAuthorty.FileDirectorysEdit"></i>
+            <i nz-icon type="delete" title="删除" (click)="deleteCatalog(node)" *ngIf="status.pageAuthorty.Delete || status.pageAuthorty.FileDirectorysDelete"></i>
+          </span>
+        </div>
+      </ng-template>
+    </nz-tree>
+  </nz-spin>
+</div>
+
+<!-- 添加/编辑 -->
+<nz-modal [(nzVisible)]="operationStatus.modal.operationModalStatus" [nzContent]="addModalContent"
+  [nzFooter]="operationStatus.modal.isShowModalFooter ? addModalFooter : null"
+  (nzOnCancel)="operationCloseModal('operationModalStatus')"
+  [nzTitle]="operationStatus.modal.operationModalTitle">
+  <ng-template #addModalContent>
+    <components-custom-forms 
+      [formData]="operationStatus.modal.customFormInfoModel"
+      [disabledForm]="operationStatus.modelDisabled"
+      #customForms>
+    </components-custom-forms>
+  </ng-template>
+  <ng-template #addModalFooter>
+    <button nz-button 
+      *ngIf="operationStatus.modal.sureButton"
+      [nzType]="operationStatus.modal.sureButton.type || 'primary'"
+      [disabled]="operationStatus.modelDisabled"
+      (click)="operationSubmitModal()">
+      {{operationStatus.modelDisabled ? operationStatus.modal.sureButton.submitText : operationStatus.modal.sureButton.text}}
+    </button>
+    <button nz-button 
+      *ngIf="operationStatus.modal.resetButton"
+      [nzType]="operationStatus.modal.resetButton.type || 'default'"
+      [disabled]="operationStatus.modelDisabled"
+      (click)="operationResetModal()">
+      {{operationStatus.modelDisabled ? operationStatus.modal.resetButton.submitText : operationStatus.modal.resetButton.text}}
+    </button>
+  </ng-template>
+</nz-modal>

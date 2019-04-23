@@ -1,0 +1,106 @@
+<!-- 
+  模型管理
+  @author: AndyPan
+  @createdata: 2019年3月7日14:12:03
+ -->
+
+<div class="common-main-wrap model-manage-wrap">
+  <div class="common-main-hd">
+    <span class="common-bread-crumb">
+      <nz-breadcrumb nzSeparator=">">
+        <nz-breadcrumb-item>
+          设置
+        </nz-breadcrumb-item>
+        <nz-breadcrumb-item>
+          模型管理
+        </nz-breadcrumb-item>
+        <nz-breadcrumb-item>
+          模型列表
+        </nz-breadcrumb-item>
+      </nz-breadcrumb>
+    </span>
+    <span class="common-bread-search">
+      <nz-input-group nzSearch [nzSuffix]="suffixButton">
+        <input type="text" nz-input placeholder="关键字搜索" (keyup)="keyupEvent($event)" [(ngModel)]="findJson.filter" />
+      </nz-input-group>
+      <ng-template #suffixButton>
+        <button nz-button nzType="primary" nzSearch (click)="searchEvent()">搜索</button>
+      </ng-template>
+    </span>
+  </div>
+  <div class="common-main-cont">
+    <nz-spin [nzTip]="operationStatus.loadingTip" [nzSpinning]="operationStatus.isLoading">
+      <div class="common-table-wrap">
+        <div class="common-table-cont zzj-scrollbar">
+          <nz-table #basicTable [nzData]="dataSet" [nzShowPagination]="false">
+            <thead>
+              <tr>
+                <th>序号</th>
+                <th>模型名称</th>
+                <th>关联状态</th>
+                <th width="120px">设置</th>
+                <!-- <th width="130px">
+                  <button nz-button [nzType]="'primary'" [nzSize]="'small'" (click)="uploadFile.click()">
+                    添加模型文件
+                  </button>
+                  <input type="file" class="input-file" (change)="fileChange($event)" #uploadFile>
+                  <nag-file-uploader [ngStyle]="fileStyle" [autoUpload]="true" [flowFiles]="imageQueue" [multiple]="false"
+                    (onSuccess)="fileSuccess($event)" [fileHost]="FILEURL" #imageUploader></nag-file-uploader>
+                </th> -->
+              </tr>
+            </thead>
+            <tbody class="tbody">
+              <tr *ngFor="let data of dataSet;let idx = index">
+                <td>{{idx + 1}}</td>
+                <td>{{data.name}}</td>
+                <td>{{data.relation}}</td>
+                <td>
+                  <a href="javascript:;" (click)="relationProject(data)" title="关联模型">
+                    <i nz-icon type="link"></i>
+                  </a>
+                </td>
+              </tr>
+            </tbody>
+          </nz-table>
+        </div>
+        <div class="common-pager">
+          <span class="common-pager-helper">
+            <!-- <button nz-button 
+                [disabled]="operationStatus.delBtnStatus" 
+                [nzType]="'primary'" 
+                [nzSize]="'small'"
+                *ngIf="this.status.pageAuthorty.ManageOrganizationTree"
+                (click)="operateData()">
+                批量删除
+              </button> -->
+          </span>
+          <nz-pagination [(nzPageIndex)]="pageIndex" [nzTotal]="pageTotal" (nzPageIndexChange)="pageIndexChange($event)"
+            (nzPageSizeChange)="pageSizeChange($event)" nzShowSizeChanger nzShowQuickJumper
+            [nzShowTotal]="rangeTemplate"></nz-pagination>
+          <ng-template #rangeTemplate let-total>
+            共 {{total}} 条
+          </ng-template>
+        </div>
+      </div>
+    </nz-spin>
+  </div>
+</div>
+
+<nz-modal [(nzVisible)]="isVisible" [nzTitle]="modalTitle" [nzContent]="modalContent" [nzFooter]="modalFooter"
+  (nzOnCancel)="handleCancel()">
+  <ng-template #modalTitle>
+    编辑文件
+  </ng-template>
+
+  <ng-template #modalContent>
+    <div style="line-height: 32px">
+      文件名：
+      <input nz-input placeholder="文件名" [(ngModel)]="name" style="width: 300px">
+    </div>
+  </ng-template>
+
+  <ng-template #modalFooter>
+    <button nz-button nzType="default" (click)="handleCancel()">取消</button>
+    <button nz-button nzType="primary" (click)="handleOk()">确认</button>
+  </ng-template>
+</nz-modal>

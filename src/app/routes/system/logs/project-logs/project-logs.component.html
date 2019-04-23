@@ -1,0 +1,63 @@
+<!-- 
+  系统日志
+  @author: xyj
+  @createdata: 2019年2月18日09:42:30
+ -->
+
+ <div class="common-main-wrap project-logs-wrap">
+  <div class="common-main-hd">
+    <span> 共计：<label class="project-logs-number">{{status.pageTotal}}</label>条</span>
+    <span class="common-bread-search">
+        <nz-input-group nzSearch [nzSuffix]="suffixButton">
+          <input type="text" nz-input placeholder="关键字搜索"
+            (keyup)="keyupEvent($event)"
+            [(ngModel)]="status.keywords"  />
+        </nz-input-group>
+        <ng-template #suffixButton>
+          <button nz-button nzType="primary" nzSearch  (click)="searchEvent()">搜索</button>
+        </ng-template>
+      </span>
+  </div>
+  <div class="common-main-cont">
+    <nz-spin [nzTip]="operationStatus.loadingTip" [nzSpinning]="operationStatus.isLoading">
+      <div class="common-table-wrap">
+        <div class="common-table-cont zzj-scrollbar">
+          <nz-table #basicTable [nzData]="status.dataList" [nzShowPagination]="false">
+            <thead>
+              <tr>
+                <th>序号</th>
+                <th>姓名</th>
+                <th>浏览器</th>
+                <th>状态</th>
+                <th>登录时间</th>
+                <th>登录IP</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let data of status.dataList;let idx = index">
+                <td>{{idx+1}}</td>
+                <td>{{data.userNameOrEmailAddress?data.userNameOrEmailAddress:'-'}}</td>
+                <td [title]="data.browserInfo">{{data.browserInfo | slice:0:69}}...</td>
+                <td>{{data.result==="Success"?"成功":"失败"}}</td>
+                <td>{{data.creationTime | DateTransformPipe}}</td>
+                <td>
+                  {{data.clientIpAddress}}
+                  <a href="http://www.ip138.com/ips138.asp?ip={{data.clientIpAddress}}&action=2" target="_blank">[查看]</a>
+                </td>
+              </tr>
+            </tbody>
+          </nz-table>
+        </div>
+        <div class="common-pager">
+            <nz-pagination [(nzPageIndex)]="status.pageIndex" 
+            [nzTotal]="status.pageTotal" 
+            (nzPageIndexChange)="pageIndexChange($event)"
+            (nzPageSizeChange)="pageSizeChange($event)"
+            nzShowSizeChanger
+            nzShowQuickJumper></nz-pagination>
+          <div style="clear: both;"></div>
+        </div>
+      </div>
+    </nz-spin>
+  </div>
+</div>

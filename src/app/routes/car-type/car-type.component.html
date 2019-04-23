@@ -1,0 +1,122 @@
+<!-- 
+  车型列表
+  @author: AndyPan
+  @createdata: 2018年11月28日09:14:12
+ -->
+
+<div class="car-type-wrap">
+  <div class="hd-search-box">
+    <!-- 搜索框 -->
+    <div class="search-box">
+      <!-- <input nz-input class="search-box-inp" 
+        [(ngModel)]="operationStatus.keywords" 
+        (keyup)="keyupEvent($event)"
+        id="j-keyword"
+        placeholder="搜索车型名称">
+      <input type="button" class="search-box-btn" (click)="searchEvent()" value="搜索" /> -->
+      <nz-input-group nzSearch [nzSuffix]="suffixButton">
+        <input type="text" nz-input placeholder="搜索车型名称"
+          (keyup)="keyupEvent($event)"
+          [(ngModel)]="operationStatus.filter"  />
+      </nz-input-group>
+      <ng-template #suffixButton>
+        <button nz-button nzType="primary" nzSearch  (click)="searchEvent()">搜索</button>
+      </ng-template>
+    </div>
+  </div>
+  <!-- <div class="car-type-cont car-type-manage"> -->
+  <div class="car-type-cont">
+    <!-- 筛选条件 -->
+    <div class="car-type-filter">
+      <!-- 自定义表单组件 -->
+      <components-custom-forms 
+        [formData]="status.filterModal"
+        [defaultTip]="true"
+        [isShowLabel]="true"
+        #customForms>
+      </components-custom-forms>
+      <div class="filter-btn-wrap">
+        <button nz-button nzType="primary" 
+        nzSize="large" 
+        (click)="filterEvent()"
+        class="btn-filter">搜索</button>
+        <button nz-button nzType="default" 
+        nzSize="large" 
+        (click)="resetEvent()"
+        class="btn-reset">重置</button>
+      </div>
+    </div>
+    <div class="car-type-list">
+      <nz-spin [nzTip]="operationStatus.loadingTip" [nzSpinning]="operationStatus.isLoading">
+        <div class="list-breadcrumb-hd">
+          全部车型
+          <a href="javascript:;" class="btn-new-cartype" (click)="newCarType()"
+            *ngIf="status.pageAuthorty.Create">
+            <i nz-icon type="plus-circle" theme="fill"></i>
+            新建车型
+          </a>
+        </div>
+        <div class="list-container">
+          <!-- 图文列表组件 -->
+          <!-- <components-imgtext-list
+            [dataList]="status.imgTextList"
+            itemType="small"
+            [tools]="status.tools"
+            (onToolsClick)="toolsClickEvent($event)"
+            #imgtextList></components-imgtext-list> -->
+          <components-imgtext-list
+            [dataList]="status.imgTextList"
+            [tools]="status.tools"
+            (onToolsClick)="toolsClickEvent($event)"
+            #imgtextList></components-imgtext-list>
+        </div>
+        <!-- 重写后的分页组件 -->
+        <components-custom-pager
+          [pageIndex]="operationStatus.pager.pageIndex"
+          [totalCount]="operationStatus.pager.totalCount"
+          [pageSize]="operationStatus.pager.pageSize"
+          [totalPages]="operationStatus.pager.totalPages"
+          (onPageIndexChange)="pageIndexChange($event)"
+          *ngIf="status.imgTextList.length"
+          #customPager></components-custom-pager>
+      </nz-spin>
+    </div>
+  </div>
+
+  
+  <!-- 弹出框（新增、编辑） -->
+  <nz-modal [(nzVisible)]="operationStatus.modal.operationModalStatus" [nzContent]="addModalContent"
+    [nzFooter]="operationStatus.modal.isShowModalFooter ? addModalFooter : null"
+    (nzOnCancel)="operationCloseModal('operationModalStatus')"
+    [nzWidth]="600"
+    [nzMaskClosable]="false"
+    [nzTitle]="operationStatus.modal.operationModalTitle">
+    <ng-template #addModalContent>
+      <components-custom-forms 
+        [formData]="operationStatus.modal.customFormInfoModel"
+        [disabledForm]="operationStatus.modelDisabled"
+        (onUploadFileChange)="uploadFileChange($event)"
+        (onUploadFileSuccess)="uploadFileSuccess($event)"
+        (onUploadFileFail)="uploadFileFail($event)"
+        #customFormsByTypeInfo>
+      </components-custom-forms>
+    </ng-template>
+    <ng-template #addModalFooter>
+      <button nz-button 
+        *ngIf="operationStatus.modal.sureButton"
+        [nzType]="operationStatus.modal.sureButton.type || 'primary'"
+        [disabled]="operationStatus.modelDisabled"
+        (click)="operationSubmitModal()">
+        {{operationStatus.modelDisabled ? (operationStatus.modelDisabled == 1 ? operationStatus.modal.sureButton.text : operationStatus.modal.sureButton.submitText) : operationStatus.modal.sureButton.text}}
+      </button>
+      <button nz-button 
+        *ngIf="operationStatus.modal.resetButton"
+        [nzType]="operationStatus.modal.resetButton.type || 'default'"
+        [disabled]="operationStatus.modelDisabled"
+        (click)="operationResetModal()">
+        {{operationStatus.modelDisabled ? operationStatus.modal.resetButton.submitText : operationStatus.modal.resetButton.text}}
+      </button>
+    </ng-template>
+  </nz-modal>
+
+</div>

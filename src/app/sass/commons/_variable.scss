@@ -1,0 +1,40 @@
+/**
+ * 公共变量-scss
+ * @author AndyPan
+ * @createdate 2018年11月28日10:16:25
+ */
+
+// 公共内容包裹容器宽度
+$CommonWrapWidth: 1080px;
+$CommonWrapWidth1: 1250px;
+
+// 公共元素阴影
+$BoxShadow: 0px 0px 8px #bbb;
+
+// 公共边框颜色
+$BorderColor: #eee;
+$ColorD: #ddd;
+$ColorC: #ccc;
+$ColorE: #EEE;
+$ColorD3: #D3D3D3;
+$ColorF8: #f8f8f8;
+$Color6E: #6E6E6E;
+$Color79: #797979;
+$ColorBC: #BCBCBC;
+
+// 项目主色
+$PrimaryColor: #419FE5;
+// $PrimaryColor: #1890ff;
+
+// 辅色
+$AuxiliaryColor: #EAF4FD;
+
+// 白色
+$WhiteColor: #FFF;
+
+// 文字主色
+$PrimaryFontColor: #666;
+$DragPrimaryFontColor: #494949;
+
+// 文字辅色
+$AuxiliaryFontColor: #999;

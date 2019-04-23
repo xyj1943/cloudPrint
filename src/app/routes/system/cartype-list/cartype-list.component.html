@@ -1,0 +1,94 @@
+<!-- 
+  车型列表
+  @author: AndyPan
+  @createdata: 2018年11月29日14:51:49
+ -->
+
+<div class="common-main-wrap system-wrap">
+  <div class="common-main-hd">
+    <span class="common-bread-crumb">
+      <nz-breadcrumb nzSeparator=">">
+        <nz-breadcrumb-item>
+          系统管理
+        </nz-breadcrumb-item>
+        <nz-breadcrumb-item>
+          车型管理
+        </nz-breadcrumb-item>
+        <nz-breadcrumb-item>
+          车型列表
+        </nz-breadcrumb-item>
+      </nz-breadcrumb>
+    </span>
+    <span class="common-bread-search">
+      <nz-input-group nzSearch [nzSuffix]="suffixButton">
+        <input type="text" nz-input placeholder="关键字搜索"
+          (keyup)="keyupEvent($event)"
+          [(ngModel)]="operationStatus.filter"  />
+      </nz-input-group>
+      <ng-template #suffixButton>
+        <button nz-button nzType="primary" nzSearch (click)="searchEvent()">搜索</button>
+      </ng-template>
+    </span>
+  </div>
+  <div class="common-main-cont">
+    <nz-spin [nzTip]="operationStatus.loadingTip" [nzSpinning]="operationStatus.isLoading">
+      <div class="common-table-wrap auto">
+        <div class="common-table-cont zzj-scrollbar">
+          <nz-table #basicTable [nzData]="status.dataList" [nzShowPagination]="false">
+            <thead>
+              <tr>
+                <!-- <th nzShowCheckbox 
+                  [(nzChecked)]="operationStatus.allChecked" 
+                  [nzIndeterminate]="operationStatus.indeterminate"
+                  (nzCheckedChange)="checkAll($event)"></th> -->
+                <th>序号</th>
+                <th>车型名称</th>
+                <th>车型编号</th>
+                <th>车辆类型</th>
+                <th>生产年份</th>
+                <th>创建时间</th>
+                <th>设置</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let data of status.dataList;let idx = index">
+                <!-- <td nzShowCheckbox 
+                  [(nzChecked)]="data.checked"
+                  (nzCheckedChange)="refreshCheckboxStatus()"></td> -->
+                <td>{{idx + 1}}</td>
+                <td class="hidden-row auto">{{data.name}}</td>
+                <td>{{data.code}}</td>
+                <td>{{data.category | CarCategory}}</td>
+                <td>{{data.sopTime | date : "yyyy-MM"}}</td>
+                <td>{{data. creationTime | DateTransformPipe}}</td>
+                <td>
+                  <a href="javascript:;" (click)="goToSet(data)" title="设置">
+                    <i nz-icon type="setting" theme="outline"></i>
+                  </a>
+                </td>
+                
+            </tbody>
+          </nz-table>
+        </div>
+        <div class="common-pager">
+          <span class="common-pager-helper">
+            <!-- <button nz-button 
+              [disabled]="operationStatus.delBtnStatus" 
+              [nzType]="'primary'" 
+              [nzSize]="'small'"
+              (click)="operateData()">
+              批量删除
+            </button> -->
+          </span>
+          <nz-pagination [(nzPageIndex)]="operationStatus.pager.pageIndex" [nzTotal]="operationStatus.pager.totalPages"
+            (nzPageIndexChange)="pageIndexChange($event)" (nzPageSizeChange)="pageSizeChange($event)" nzShowSizeChanger
+            nzShowQuickJumper [nzShowTotal]="rangeTemplate" ></nz-pagination>
+            <ng-template #rangeTemplate  let-total>
+                共 {{total}} 条 
+              </ng-template>
+        </div>
+      </div>
+    </nz-spin>
+  </div>
+
+</div>

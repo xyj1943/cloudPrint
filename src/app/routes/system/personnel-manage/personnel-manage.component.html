@@ -1,0 +1,153 @@
+<!-- 
+  人员管理
+  @author: AndyPan
+  @createdata: 2018年11月21日18:03:22
+ -->
+
+<div class="common-main-wrap system-wrap">
+  <div class="common-main-hd">
+    <span class="common-bread-crumb">
+      <nz-breadcrumb nzSeparator=">">
+        <nz-breadcrumb-item>
+          系统管理
+        </nz-breadcrumb-item>
+        <nz-breadcrumb-item>
+          人员管理
+        </nz-breadcrumb-item>
+        <nz-breadcrumb-item>
+          人员列表
+        </nz-breadcrumb-item>
+      </nz-breadcrumb>
+    </span>
+    <span class="common-bread-search">
+      <nz-input-group nzSearch [nzSuffix]="suffixButton">
+        <input type="text" nz-input placeholder="关键字搜索"
+          (keyup)="keyupEvent($event)"
+          [(ngModel)]="operationStatus.filter"  />
+      </nz-input-group>
+      <ng-template #suffixButton>
+        <button nz-button nzType="primary" nzSearch  (click)="searchEvent()">搜索</button>
+      </ng-template>
+    </span>
+  </div>
+  <div class="common-main-cont">
+    <nz-spin [nzTip]="operationStatus.loadingTip" [nzSpinning]="operationStatus.isLoading">
+      <div class="common-table-wrap">
+        <div class="common-table-cont zzj-scrollbar">
+          <nz-table #basicTable [nzData]="status.dataList" [nzShowPagination]="false">
+            <thead (nzSortChange)="dataSort($event)" nzSingleSort>
+              <tr>
+                <th nzShowCheckbox 
+                  [(nzChecked)]="operationStatus.allChecked" 
+                  [nzIndeterminate]="operationStatus.indeterminate"
+                  (nzCheckedChange)="pageCheckAll($event)"
+                  *ngIf="status.pageAuthorty.Delete"></th>
+                <th>序号</th>
+                <th>账号</th>
+                <th nzShowSort nzSortKey="name">姓名</th>                
+                <th>部门</th>
+                <th>角色</th>
+                <th>邮箱</th>
+                <th>手机</th>
+                <th width="120px">
+                  <button nz-button 
+                    [nzType]="'primary'" 
+                    [nzSize]="'small'"
+                    (click)="addPersonnel()"
+                    *ngIf="status.pageAuthorty.Create">
+                    添加人员
+                  </button>
+                </th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let data of status.dataList;let idx = index">
+                <td nzShowCheckbox 
+                  [(nzChecked)]="data.checked"
+                  [nzDisabled]="status.currentUserId != data.id && data.id != 1 ? false : true"
+                  (nzCheckedChange)="refreshCheckboxStatus()"
+                  *ngIf="status.pageAuthorty.Delete"></td>
+                <td>{{idx + 1}}</td>
+                <td>{{data.userName}}</td>
+                <td>{{data.name}}</td>
+                <td>{{data.organizationUnitName}}</td>
+                <td>{{data.roles ? (data.roles[0] ? data.roles[0].roleName : '-') : '-'}}</td>
+                <td>{{data.emailAddress}}</td>
+                <td>{{data.phoneNumber}}</td>
+                <td>
+                  <a href="javascript:;" (click)="resetPassword(data)" title="重置密码"
+                    *ngIf="status.currentUserId == 1">
+                    <i nz-icon type="retweet" theme="outline"></i>
+                  </a>
+                  &nbsp;
+                  <a href="javascript:;" (click)="editPersonnel(data)" title="编辑"
+                    *ngIf="status.pageAuthorty.Edit">
+                    <i nz-icon type="form"></i>
+                  </a>
+                  &nbsp;
+                  <a href="javascript:;" (click)="deletePersonnel(data)" title="删除"
+                    *ngIf="status.pageAuthorty.Delete && status.currentUserId != data.id && data.id != 1">
+                    <i nz-icon type="delete"></i>
+                  </a>
+                </td>
+              </tr>
+            </tbody>
+          </nz-table>
+        </div>
+        <div class="common-pager">
+          <span class="common-pager-helper">
+              <button nz-button 
+                [disabled]="operationStatus.delBtnStatus" 
+                [nzType]="'primary'" 
+                [nzSize]="'small'"
+                (click)="operateData()"
+                *ngIf="status.pageAuthorty.Delete">
+                批量删除
+              </button>
+          </span>
+          <nz-pagination [(nzPageIndex)]="operationStatus.pager.pageIndex"
+            [nzPageSize]="operationStatus.pager.pageSize" 
+            [nzShowTotal]="rangeTemplate"
+            [nzTotal]="operationStatus.pager.totalPages" 
+            (nzPageIndexChange)="pageIndexChange($event)"
+            (nzPageSizeChange)="pageSizeChange($event)"
+            nzShowSizeChanger 
+            nzShowQuickJumper></nz-pagination> 
+             <ng-template #rangeTemplate  let-total>
+                共 {{total}} 条 
+              </ng-template>
+        </div>
+      </div>
+    </nz-spin>
+  </div>
+
+  <!-- 弹出框（新增、编辑） -->
+  <nz-modal [(nzVisible)]="operationStatus.modal.operationModalStatus" [nzContent]="addModalContent"
+    [nzFooter]="operationStatus.modal.isShowModalFooter ? addModalFooter : null"
+    (nzOnCancel)="operationCloseModal('operationModalStatus')"
+    [nzTitle]="operationStatus.modal.operationModalTitle">
+    <ng-template #addModalContent>
+      <components-custom-forms 
+        [formData]="operationStatus.modal.customFormInfoModel"
+        [disabledForm]="operationStatus.modelDisabled"
+        #customForms>
+      </components-custom-forms>
+    </ng-template>
+    <ng-template #addModalFooter>
+      <button nz-button 
+        *ngIf="operationStatus.modal.sureButton"
+        [nzType]="operationStatus.modal.sureButton.type || 'primary'"
+        [disabled]="operationStatus.modelDisabled"
+        (click)="operationSubmitModal()">
+        {{operationStatus.modelDisabled ? operationStatus.modal.sureButton.submitText : operationStatus.modal.sureButton.text}}
+      </button>
+      <button nz-button 
+        *ngIf="operationStatus.modal.resetButton"
+        [nzType]="operationStatus.modal.resetButton.type || 'default'"
+        [disabled]="operationStatus.modelDisabled"
+        (click)="operationResetModal()">
+        {{operationStatus.modelDisabled ? operationStatus.modal.resetButton.submitText : operationStatus.modal.resetButton.text}}
+      </button>
+    </ng-template>
+  </nz-modal>
+</div>

@@ -1,0 +1,86 @@
+<!-- 
+  公共页面模板-html
+  @author AndyPan
+  @createdate 2018年11月21日14:09:25
+ -->
+<div class="common-layout-wrap">
+  <div class="common-layout-hd" *ngIf="appShow">
+    <div class="common-layout-hd-wrap"
+      [ngClass]="status.currentObjs ? status.currentObjs.className : ''">
+      <span class="head-logo-mask">
+        <span class="head-name"></span>
+        <span class="project-name"
+          *ngIf="status.carModelName"
+          [title]="status.carModelName" (click)="goToModel()">{{status.carModelName}}</span>
+      </span>
+      <span class="head-logo-wrap">
+        <span class="head-logo" (click)="goToHome()"></span>
+      </span>
+      <div class="layout-hd-right">
+        <span
+        *ngFor="let navItem of status.quickNavs">
+          <a href="javascript:;" class="hd-nav-item split-line"
+            [ngClass]="navItem.active"
+            *ngIf="navItem.isShow != false"
+            (click)="routeTo(navItem)">
+            <span class="nav-item-cont">{{navItem.text}}</span>
+          </a>
+        </span>
+        <a href="javascript:;" class="hd-nav-item">
+          <span class="nav-item-cont">
+            <nz-dropdown [nzPlacement]="'bottomRight'">
+              <a nz-dropdown>
+                <img class="hd-thumb" src="../../../assets/images/layout/common/logo.png" />
+                {{status.userName}}({{status.roleName}})<i nz-icon type="down"></i>
+              </a>
+              <ul nz-menu nzSelectable>
+                <!-- <li nz-menu-item>
+                  <a (click)="personalInformation()">个人信息</a>
+                </li>
+                <li nz-menu-item>
+                  <a (click)="updatePwd()">修改密码</a>
+                </li> -->
+                <li nz-menu-item>
+                  <a (click)="personalInformation('user-info', 0)">个人信息</a>
+                </li>
+                <li nz-menu-item>
+                  <a (click)="personalInformation('update-pwd', 1)">修改密码</a>
+                </li>
+                <li nz-menu-item>
+                  <a (click)="logout()">注销</a>
+                </li>
+              </ul>
+            </nz-dropdown>
+          </span>
+        </a>
+      </div>
+    </div>
+  </div>
+  <div class="common-layout-bd zzj-scrollbar" [ngStyle]="modelStyle"> 
+    <router-outlet></router-outlet>
+  </div>
+  <div class="common-layout-copyright" *ngIf="appShow">
+      <span class="font">中国汽车工程研究院股份有限公司&nbsp;|&nbsp;版权所有&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;技术支持：筑智建&nbsp;|&nbsp;ARchGL&nbsp;&nbsp;</span>
+      <span class="logo_gray"></span>
+      <span class="font">&nbsp;蜘蛛引擎</span>
+  </div>
+
+  
+  <!-- 修改密码 -->
+  <nz-modal [(nzVisible)]="status.updateModalStatus"
+    [nzContent]="updateModalContent"
+    [nzFooter]="updateModalFooter"
+    (nzOnCancel)="closeModal('updateModalStatus')"
+    nzTitle="修改密码">
+    <ng-template #updateModalContent>
+      <components-custom-forms
+        [formData]="status.updatePwdModel"
+        [defaultTip]="true"
+        #customForms>
+      </components-custom-forms>
+    </ng-template>
+    <ng-template #updateModalFooter>
+      <button nz-button nzType="primary" (click)="updateSure()">修改</button>
+    </ng-template>
+  </nz-modal>
+</div>

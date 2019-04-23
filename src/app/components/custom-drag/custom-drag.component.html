@@ -1,0 +1,17 @@
+<!-- 
+  拖拽
+  @author: AndyPan
+  @createdate: 2019年2月13日15:10:18
+ -->
+
+<div class="custom-drag" [ngClass]="className" unselectable="on"
+  (mousedown)="drag($event)"
+  (mousemove)="dragMove($event)">
+  <div class="drag-clone-target"
+    *ngIf="status.isDragBegin"
+    [ngStyle]="status.dragTargetStyle"></div>
+  <div class="drag-split-target" *ngIf="status.isDragBegin && status.isDragSplit" #jDragSplit></div>
+  <!-- <div class="drag-mask-target" *ngIf="status.isDragBegin" #jDragMask></div> -->
+  <!-- 自定义插槽结构 -->
+  <ng-content select="[name=drag-child]"></ng-content>
+</div>

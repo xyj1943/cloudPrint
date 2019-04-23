@@ -1,0 +1,32 @@
+<!-- 
+  用户信息
+  @author: AndyPan
+  @createdata: 2019年1月11日13:54:10
+ -->
+
+<div class="user-info-wrap">
+  <div class="user-info-container">
+    <div class="user-info-menu">
+      <a href="javascript:;" class="menu-item"
+        *ngFor="let item of status.menus;let idx=index;" [ngClass]="item.active?'active':''"
+        (click)="renderType(idx)">
+        {{item.text}}
+      </a>
+    </div>
+    <div class="user-info-content">
+      <div class="info-title">{{status.activeMenu ? status.activeMenu.text : ''}}</div>
+      <components-custom-forms
+        [formData]="status.customInfoModel"
+        [disabledForm]="status.modelDisabled"
+        #customForms></components-custom-forms>
+      <div class="info-bottom">
+        <button nz-button 
+          nzType="primary"
+          [disabled]="status.modelDisabled"
+          (click)="operationSave()">
+          {{status.modelDisabled ? '保存中' : '保存'}}
+        </button>
+      </div>
+    </div>
+  </div>
+</div>

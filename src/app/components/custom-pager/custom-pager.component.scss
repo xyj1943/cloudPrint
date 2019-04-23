@@ -1,0 +1,48 @@
+/**
+ * 自定义表单模板-scss
+ * @author AndyPan
+ * @createdate 2018年11月26日17:16:16
+ */
+
+@import '../../sass/base.scss';
+
+// 分页样式重置
+.pager-wrap{
+    margin-top: 10px;
+    .quick-jumper{
+        float: left;
+        margin-left: 20px;
+        margin-right: 10px;
+        margin-top: -5px;
+        input{
+            width: 50px;
+            height: 30px;
+        }
+    }
+    .pager-item-custom{
+        float: left;
+        color: #474747;
+        height: 24px;
+        line-height: 24px;
+        margin: 0 10px;
+        &.disabled{
+            color: rgba(0,0,0,.25);
+            cursor: not-allowed;
+        }
+    }
+    ::ng-deep .ant-pagination{
+        float: left;
+    }
+    ::ng-deep .ant-pagination.mini .ant-pagination-item{
+        margin: 0 2px;
+    }
+    ::ng-deep .ant-pagination.mini .ant-pagination-next, 
+    ::ng-deep .ant-pagination.mini .ant-pagination-prev{
+        margin: 0 10px;
+    }
+    ::ng-deep .ant-pagination-item-active{
+        border-color: $PrimaryColor;
+        background: $PrimaryColor;
+        color: $WhiteColor;
+    }
+}

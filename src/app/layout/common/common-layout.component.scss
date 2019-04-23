@@ -1,0 +1,163 @@
+/**
+ * 公共页面模板-scss
+ * @author AndyPan
+ * @createdate 2018年11月21日14:09:14
+ */
+
+ @import '../../sass/base.scss';
+ 
+
+.common-layout-wrap{
+    width: 100%;
+    height: 100%;
+    position: relative;
+    $hdHeight: 60px;
+    .common-layout-hd{
+        height: $hdHeight;
+        @include box-shadow($BoxShadow);
+        position: relative;
+        z-index: 100;
+        background: #FFF;
+        .common-layout-hd-wrap{
+            height: $hdHeight;
+            position: relative;
+            z-index: 100;
+            width: 100%;
+            @include transition(all .2s ease);
+            &.default-wrap{
+                width: $CommonWrapWidth;
+                margin: 0 auto;
+            }
+        }
+        .head-logo-mask{
+            width: 425px;
+            height: 100%;
+            background-color: #FFF;
+            position: absolute;
+            top: 0;
+            left: 20px;
+            
+            .head-name{
+                float: right;
+                width: 270px;
+                height: 100%;
+                margin-right: 20px;
+                background: url('../../../assets/images/layout/common/head-name.png') 0 center no-repeat;
+            }
+            .project-name{
+                display: inline-block;
+                height: 100%;
+                width: 260px;
+                position: absolute;
+                top: 0;
+                right: -240px;
+                line-height: $hdHeight;
+                font-weight: bold;
+                cursor: pointer;
+                @include text-overflow();
+                padding-left: 30px;
+                background: url('../../../assets/images/icon/icon-head-point.png') 10px center no-repeat;
+            }
+        }
+        .head-logo-wrap{
+            display: inline-block;
+            width: 110px;
+            height: 110px;
+            border-radius: 50%;
+            overflow: hidden;
+            margin-left: 30px;
+            text-align: center;
+            background-color: #FFF;
+            @include box-shadow($BoxShadow);
+            .head-logo{
+                width: 110px;
+                height: 110px;
+                position: absolute;
+                top: 0;
+                left: 30px;
+                background: url('../../../assets/images/layout/common/logo.png') center center no-repeat;
+                cursor: pointer;
+            }
+        }
+        .layout-hd-right{
+            float: right;
+            height: 100%;
+            .hd-nav-item{
+                display: inline-block;
+                text-decoration: none;
+                outline: none;
+                position: relative;
+                &.active{
+                    .nav-item-cont{
+                        background: $PrimaryColor;
+                        color: #FFF;
+                    }
+                }
+                &.split-line{
+                    &::after{
+                        content: '';
+                        position: absolute;
+                        width: 1px;
+                        font-size: 0;
+                        height: 20px;
+                        top: 50%;
+                        right: 0;
+                        margin-top: -10px;
+                        border-right: 1px solid #CCC;
+                    }
+                }
+                .nav-item-cont{
+                    display: inline-block;
+                    margin: 15px 20px;
+                    height: 30px;
+                    line-height: 30px;
+                    font-size: 14px;
+                    color: #333;
+                    padding: 0 10px;
+                    @include border-radius(5px);
+                    a{
+                        color: #333;
+                    }
+                    .hd-thumb{
+                        display: inline-block;
+                        width: 30px;
+                        height: 30px;
+                        border-radius: 100%;
+                        margin-top: -3px;
+                        margin-right: 5px;
+                    }
+                }
+            }
+        }
+    }
+    .common-layout-bd{
+        position: absolute;
+        top: $hdHeight - 10px;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        overflow-y: auto;
+        background: #F8F8F8;
+    }
+    .common-layout-copyright{
+        position:  fixed;
+        width: 510px;
+        z-index: 10;
+        left: 0px;
+        bottom: 0px;
+        padding: 5px 5px;
+        font-size: 12px;
+        color: #000000;
+        background: #eeeeee;
+        border-radius:5px; 
+        opacity:0.5;
+   
+        .logo_gray{
+            display: inline-block;
+            width:24px;
+            height: 10px;
+            background: url('../../../assets/images/layout/common/logo_gray.png') 0px center no-repeat;      
+        }
+          
+    }
+}

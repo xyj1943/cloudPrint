@@ -1,0 +1,119 @@
+/**
+ * 图文列表模板-scss
+ * @author AndyPan
+ * @createdate 2018年11月28日13:42:02
+ */
+ 
+ @import '../../sass/base.scss';
+
+.imgtext-list{
+    @include clear-fix();
+    height: auto;
+    position: relative;
+    overflow: hidden;
+    .imgtext-list-empty{
+        padding-top: 30px;
+        padding-bottom: 30px;
+        text-align: center;
+        font-size: 18px;
+        color: $BorderColor;
+    }
+    .imgtext-list-wrap{
+        width: 110%;
+        position: relative;
+        @include clear-fix();
+    }
+    .imgtext-item{
+        display: inline-block;
+        text-decoration: none;
+        outline: none;
+        padding: 20px;
+        padding-top: 10px;
+        padding-bottom: 10px;
+        margin-right: 20px;
+        background: transparent;
+        @include transition(all .4s ease);
+        @include border-radius(5px);
+        position: relative;
+
+        &.small{
+            .imgtext-word-wrap{
+                // width: 150px;
+                width: 115px;
+            }
+        }
+        &:hover, &.active{
+            background: $AuxiliaryColor;
+            .item-tools{
+                display: inline-block;
+            }
+        }
+
+        .item-tools{
+            display: none;
+            position: absolute;
+            right: 10px;
+            top: 4px;
+            color: $AuxiliaryFontColor;
+            .icon-tools-item{
+                width: 16px;
+                height: 16px;
+                margin: 0 3px;
+                // transform: rotate(45deg);
+                &:hover{
+                    color: $PrimaryColor;
+                }
+                &.routed{
+                   transform: rotate(-45deg);
+                   color: #1890ff;
+                }
+            }
+            
+        }
+
+        $thumbHeight: 105px;
+        .imgtext-thumb-wrap{
+            float: left;
+            width: 150px;
+            height: $thumbHeight;
+            border: 1px solid $BorderColor;
+            @include border-radius(3px);
+            position: relative;
+            text-align: center;
+            display: flex;
+            background: $WhiteColor;
+
+            .thumb{
+                max-width: 100%;
+                max-height: 100%;
+                display: inline-block;
+                margin: auto;
+            }
+        }
+        .imgtext-word-wrap{
+            width: 164px;
+            height: $thumbHeight;
+            margin-left: 20px;
+            float: right;
+
+            .word-item{
+                width: 100%;
+                @include text-overflow();
+                color: $PrimaryFontColor;
+                text-align: left;
+                float: left;
+            }
+            .item-name{
+                height: 46px;
+                line-height: 46px;
+                font-size: 14px;
+            }
+            .item-number, .item-date{
+                height: 24px;
+                line-height: 24px;
+                font-size: 12px;
+                color: $AuxiliaryFontColor;
+            }
+        }
+    }
+}

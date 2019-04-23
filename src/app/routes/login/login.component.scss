@@ -1,0 +1,126 @@
+/*
+ * 登录
+ * @author AndyPan
+ * @date 2018年10月30日10:26:34
+ */
+
+ @import '../../sass/base.scss';
+
+ .login-wrap{
+    width: 100%;
+    height: 100%;
+    min-width: 1280px;
+    min-height: 800px;
+    position: relative;
+    background-image: url('../../../assets/images/login/login-bg.jpg');
+    background-repeat: no-repeat; 
+    background-size: 100% 100%;
+
+    $width: 740px;
+    $height: 450px;
+    .login{
+        width: $width;
+        height: $height;
+        position: absolute;
+        top: 50%;
+        right: 0;
+        margin-top: -$height / 2;
+
+        .login-hd{
+            text-align: left;
+            color: #FFF;
+            .login-info-en{
+                display: inline-block;
+                width: 100%;
+                line-height: 24px;
+                font-size: 20px;
+                margin: 5px auto;
+            }
+            .login-info-zh{
+                display: inline-block;
+                width: 100%;
+                line-height: 40px;
+                font-size: 40px;
+                margin: 5px auto;
+            }
+        }
+        .login-cont{
+            margin-top: 50px;
+            color: #FFF;
+            .login-title{
+                display: inline-block;
+                width: 100%;
+                line-height: 28px;
+                font-size: 28px;
+                margin: 5px auto;
+            }
+            .login-item{
+                margin: 10px auto;
+                .ant-checkbox-wrapper{
+                    color: #FFF;
+                }
+                .btn-login{
+                    width: 300px;
+                    height: 40px;
+                    margin-top: 20px;
+                }
+                .login-item-input{
+                    display: inline-block;
+                    width: 300px;
+                    height: 50px;
+                    border-bottom: 1px solid #FFF;
+                    position: relative;
+                    .icon-login{
+                        display: inline-block;
+                        width: 50px;
+                        height: 22px;
+                        line-height: 22px;
+                        border-right: 1px solid #ccc;
+                        font-size: 22px;
+                        margin-top: 13px;
+                    }
+                    .input-wrap{
+                        position: absolute;
+                        top: 10px;
+                        left: 60px;
+                        right: 0px;
+                        bottom: 10px;
+                        .form-inp{
+                            width: 100%;
+                            height: 100%;
+                            background: transparent;
+                            border: none;
+                            color: #FFF;
+                            font-size: 14px;
+                            outline: none;
+                            &:focus{
+                                border: none;
+                                box-shadow: none;
+                            }
+                        }
+                    }
+                }
+            }     
+        }
+        .login-copyright{
+            position:  fixed;
+            width: 100%;
+            z-index: 10;
+            left: 5px;
+            bottom: 5px;
+            font-size: 14px;
+            color: #ffffff;
+            .font{
+               opacity:0.4;
+            }
+            .logo_white{
+                position: relative;
+                top: 3px;
+                display: inline-block;
+                width: 34px;
+                height: 18px;
+                background: url('../../../assets/images/layout/common/logo_white.png') 3px center no-repeat;      
+            }           
+        }    
+    }
+ }

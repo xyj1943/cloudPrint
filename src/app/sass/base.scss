@@ -1,0 +1,60 @@
+/**
+ * 基础-scss
+ * @author AndyPan
+ * @createdate 2018年11月28日10:23:11
+ * @remark 包括：公共变量、重置样式、公共函数
+ */
+
+ // 重置样式
+ @import './commons/reset';
+ // 公共函数
+ @import './commons/mixins';
+ // 全局通用变量
+ @import './commons/variable';
+
+ 
+ // 公共搜索框
+$boxHeight: 36px;
+.search-box{
+    display: inline-block;
+    height: $boxHeight;
+    
+    $radius: 4px;
+    .search-box-inp{
+        width: 220px;
+        height: 100%;
+        border: 1px solid $ColorD;
+        border-right: 0;
+        border-top-left-radius: $radius;
+        border-bottom-left-radius: $radius;
+        font-size: 12px;
+        color: $PrimaryFontColor;
+        float: left;
+        outline: none;
+        padding: 0 2px;
+    }
+    .search-box-btn{
+        width: 50px;
+        border-top-right-radius: $radius;
+        border-bottom-right-radius: $radius;
+        height: 100%;
+        background: $PrimaryColor;
+        text-align: center;
+        font-size: 14px;
+        color: $WhiteColor;
+        border: none;
+        outline: none;
+        float: left;
+    }
+}
+
+// 按钮颜色
+::ng-deep .ant-btn-primary{
+    background: $PrimaryColor;
+    border-color: $PrimaryColor;
+}
+
+::ng-deep .common-main-wrap .common-main-hd .common-bread-search{
+    margin-top: 0 
+
+}

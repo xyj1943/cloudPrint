@@ -1,0 +1,46 @@
+<!-- 
+  系统管理页面模板-html
+  @author AndyPan
+  @createdate 2018年11月21日14:04:07
+ -->
+<div class="system-layout-wrap">
+  <div class="system-layout-menu box-shadow">
+    <div class="layout-menu-wrap zzj-scrollbar">
+
+      <div class="information-panel auto">
+        <!-- <div class="menu-item"
+          *ngFor="let menu of status.menus;let idx=index;"
+          ngClass="{{menu.isActive ? 'active' : ''}}">
+          <div class="menu-item-title" (click)="clickMenu(idx)">
+            {{menu.text}}
+          </div>
+          <div class="menu-item-cont zzj-scrollbar">
+            <div class="menu-cont-wrap ml0">
+              <a href="javascript:;" class="menu-cont-item">结构管理</a>
+              <a href="javascript:;" class="menu-cont-item">结构管理</a>
+              <a href="javascript:;" class="menu-cont-item">结构管理</a>
+            </div>
+          </div>
+        </div> -->
+        <ul nz-menu [nzMode]="'inline'">
+          <li nz-submenu
+            *ngFor="let menu of status.menus;let idx=index;"
+            [(nzOpen)]="menu.isActive">
+            <span title>{{menu.text}}</span>
+            <ul>
+              <li nz-menu-item 
+                *ngFor="let child of menu.children;let childIdx=index;">
+                <span class="item-btn"
+                  (click)="menuRoute(child)">{{child.text}}</span>
+              </li>
+            </ul>
+          </li>
+        </ul>
+      </div>
+
+    </div>
+  </div>
+  <div class="system-layout-cont zzj-scrollbar">
+    <router-outlet></router-outlet>
+  </div>
+</div>

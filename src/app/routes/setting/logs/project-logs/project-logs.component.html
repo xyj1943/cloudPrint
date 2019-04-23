@@ -1,0 +1,81 @@
+<!-- 
+  系统日志
+  @author: xyj
+  @createdata: 2019年2月18日09:42:30
+ -->
+
+ <div class="common-main-wrap project-logs-wrap">
+  <div class="common-main-hd">
+
+    <span class="common-bread-crumb">
+      <nz-breadcrumb nzSeparator=">">
+        <nz-breadcrumb-item>
+          设置
+        </nz-breadcrumb-item>
+        <nz-breadcrumb-item>
+          日志管理
+        </nz-breadcrumb-item>
+        <nz-breadcrumb-item>
+          项目日志
+        </nz-breadcrumb-item>
+      </nz-breadcrumb>
+    </span>
+    <span class="common-bread-search">
+        <nz-input-group nzSearch [nzSuffix]="suffixButton">
+          <input type="text" nz-input placeholder="关键字搜索"
+            (keyup)="keyupEvent($event)"
+            [(ngModel)]="status.filter"  />
+        </nz-input-group>
+        <ng-template #suffixButton>
+          <button nz-button nzType="primary" nzSearch  (click)="searchEvent()" >搜索</button>
+        </ng-template>
+      </span>
+  </div>
+  <div class="common-main-cont">
+    <nz-spin [nzTip]="operationStatus.loadingTip" [nzSpinning]="operationStatus.isLoading">
+      <div class="common-table-wrap">
+        <div class="common-table-cont zzj-scrollbar">
+          <nz-table #basicTable [nzData]="status.dataList" [nzShowPagination]="false">
+            <thead>
+              <tr>
+                <th>序号</th>
+                <th>账号</th>
+                <th>操作类型</th>
+                <!-- <th>参数列表</th> -->
+                <th>操作时间</th>
+                <th>IP地址</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let data of status.dataList;let idx = index">
+                <td>{{idx+1}}</td>
+                <td>{{data.creatorUserName?data.creatorUserName:'-'}}</td>
+                <td [title]='data.parameters'>{{data.operationTypeName?data.operationTypeName:'-'}}</td>
+                <!-- <td [title]="data.parameters" class="hidden-row auto parameters">{{data.parameters?data.parameters:"-"}}</td> -->
+                <td>{{data.creationTime | DateTransformPipe}}</td>
+                <td>
+                  {{data.clientIpAddress}}
+                  <a href="http://www.ip138.com/ips138.asp?ip={{data.clientIpAddress}}&action=2" target="_blank">[查看]</a>
+                </td>
+              </tr>
+            </tbody>
+          </nz-table>
+        </div>
+        <div class="common-pager">
+            <nz-pagination [(nzPageIndex)]="operationStatus.pager.pageIndex" 
+            [nzTotal]="operationStatus.pager.totalPages" 
+            [nzShowTotal]="rangeTemplate"
+            (nzPageIndexChange)="pageIndexChange($event)"
+            (nzPageSizeChange)="pageSizeChange($event)"
+            nzShowSizeChanger
+            nzShowQuickJumper></nz-pagination>
+
+            <ng-template style="color:blueviolet;" #rangeTemplate let-total>
+                共 {{total}} 条 
+              </ng-template>
+          <div style="clear: both;"></div>
+        </div>
+      </div>
+    </nz-spin>
+  </div>
+</div>

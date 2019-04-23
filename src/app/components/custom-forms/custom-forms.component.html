@@ -1,0 +1,370 @@
+<!-- 
+  重写表单
+  @author: AndyPan
+  @createdate: 2018年11月26日14:06:11
+ -->
+
+<div class="form-modal" [ngClass]="className + (fontColorTheme ? ' theme-'+fontColorTheme : '')">
+  <ng-content select="[name=form-child-before]"></ng-content>
+  <div *ngIf="isRenderForm != false">
+    <div class="form-rows"
+      *ngFor="let data of modelData; let idx = index;"
+      [ngClass]="(isLabelAuto ? 'auto ' : '')+(rowSpace ? (rowSpace + ' ') : '')+(data.type == 'split-line' ? 'split-line-row ' : '')+data.rowType+' '+data.type">
+      <label class="rows-lab"
+        *ngIf="isShowLabel != false && data.isShowLabel != false && data.type != 'split-line'">{{data.text ? data.text + '：' : ''}}</label>
+      <span class="rows-inp"
+        [ngClass]="((data.type == 'checkbox-group' || data.type=='radiobox-group' || data.type == 'text') ? 'text' : '') + ((isShowLabel == false || data.isShowLabel == false || data.type == 'split-line') ? ' full' : '')">
+        <!-- 备注文本 -->
+        <label [class]="data.type"
+          *ngIf="data.type == 'remark' || data.type == 'desc' || data.type == 'remark-text'">{{data.value || data.remark}}</label>
+        <!-- 文本 -->
+        <label class="data-text"
+          *ngIf="data.type == 'text'">
+          <!-- 链接 -->
+          <label *ngIf="data.valueType == 'link'">
+            <a 
+              *ngFor="let valueItem of data.value"
+              [href]="valueItem.link"
+              [target]="valueItem.target || '_blank'">{{valueItem.text}}</a>
+          </label>
+          <!-- 文本分组显示 -->
+          <label *ngIf="data.valueType == 'group'">
+            <label class="value-group-item"
+              *ngFor="let valueItem of data.value">{{valueItem}}</label>
+          </label>
+          <!-- 粗体文本(用于标题显示等) -->
+          <label *ngIf="data.valueType == 'bold'" class="bold">{{data.valueText || data.value}}</label>
+          <!-- 默认普通文本 -->
+          <label *ngIf="!data.valueType" [ngClass]="'status-'+data.valueStatus">{{data.valueText || data.value}}</label>
+          <!-- value的备注文本 -->
+          <label class="remark" *ngIf="data.textRemark">{{data.textRemark}}</label>
+        </label>
+        <!-- 一般输入框 -->
+        <input nz-input 
+          *ngIf="!data.type || data.type == 'input'"
+          [placeholder]="data.placeholder ? data.placeholder : '请输入'+data.text" 
+          [(ngModel)]="data.value"
+          [minlength]="data.minlength"
+          [maxlength]="data.maxlength"
+          [disabled]="data.disabled != undefined ? data.disabled : disabledForm"
+          [id]="data.key"
+          autocomplete="off"
+          (keyup)="limitKeyUp($event)" [ngClass]="data.maxWidth ? 'max' : ''">
+        <!-- 密码框 -->
+        <input nz-input 
+          *ngIf="data.type == 'password'"
+          type="password"
+          [placeholder]="data.placeholder ? data.placeholder : '请输入'+data.text" 
+          [(ngModel)]="data.value"
+          [minlength]="data.minlength"
+          [maxlength]="data.maxlength"
+          [disabled]="data.disabled != undefined ? data.disabled : disabledForm"
+          [id]="data.key"
+          (keyup)="limitKeyUp($event)" [ngClass]="data.maxWidth ? 'max' : ''">
+        <!-- textarea -->
+        <textarea nz-input rows="4" 
+          *ngIf="data.type == 'textarea'"
+          [placeholder]="data.placeholder ? data.placeholder : '请输入'+(data.text || '')" 
+          [(ngModel)]="data.value"
+          [minlength]="data.minlength"
+          [maxlength]="data.maxlength"
+          [disabled]="data.disabled != undefined ? data.disabled : disabledForm"
+          [id]="data.key"
+          (keyup)="limitKeyUp($event)" [ngClass]="data.maxWidth ? 'max' : ''"></textarea>
+        <!-- 下拉框 -->
+        <nz-select class="custom-form-select"
+          *ngIf="data.type == 'select'"
+          [(ngModel)]="data.value"
+          [nzDisabled]="data.disabled != undefined ? data.disabled : disabledForm"
+          [nzShowSearch]="data.nzShowSearch"
+          [nzAllowClear]="data.nzAllowClear"
+          [nzNotFoundContent]="data.nzNotFoundContent"
+          (ngModelChange)="modelChangeEvent($event, data)"
+          [nzPlaceHolder]="data.placeholder ? data.placeholder : '请选择'+data.text">
+          <nz-option
+            *ngFor="let option of data.options;let opt = index;"
+            [nzValue]="option.value" [nzLabel]="option.text"
+            ></nz-option>
+        </nz-select><!-- 下拉框分组 -->
+        <nz-select class="custom-form-select"
+          *ngIf="data.type == 'select-groups'"
+          [(ngModel)]="data.value"
+          [nzDisabled]="data.disabled != undefined ? data.disabled : disabledForm"
+          [nzShowSearch]="data.nzShowSearch"
+          [nzAllowClear]="data.nzAllowClear"
+          [nzNotFoundContent]="data.nzNotFoundContent"
+          (ngModelChange)="modelChangeEvent($event, data)"
+          [nzPlaceHolder]="data.placeholder ? data.placeholder : '请选择'+data.text">
+          <nz-option-group
+            *ngFor="let group of data.groups"
+            [nzLabel]="group.text">
+            <nz-option
+              *ngFor="let option of group.options"
+              [nzValue]="option.value" [nzLabel]="option.text"
+              ></nz-option>
+          </nz-option-group>
+        </nz-select>
+        <!-- 日期 -->
+        <!-- 选择年月日-日期 -->
+        <nz-date-picker 
+          *ngIf="data.type == 'date'"
+          [(ngModel)]="data.value"
+          [nzDisabled]="data.disabled != undefined ? data.disabled : disabledForm"
+          [nzPlaceHolder]="data.placeholder ? data.placeholder : '请选择'+data.text"
+          (ngModelChange)="modelChangeEvent($event, data)"></nz-date-picker>
+        <!-- 选择年月-日期 -->
+        <nz-month-picker 
+          *ngIf="data.type == 'date-month'"
+          [(ngModel)]="data.value"
+          [nzDisabled]="data.disabled != undefined ? data.disabled : disabledForm"
+          [nzPlaceHolder]="data.placeholder ? data.placeholder : '请选择'+data.text"
+          (ngModelChange)="modelChangeEvent($event, data)"></nz-month-picker>
+        <!-- 选择年-日期 -->
+        <nz-year-picker 
+          *ngIf="data.type == 'date-year'"
+          [(ngModel)]="data.value"
+          [nzDisabled]="data.disabled != undefined ? data.disabled : disabledForm"
+          [nzPlaceHolder]="data.placeholder ? data.placeholder : '请选择'+data.text"
+          (ngModelChange)="modelChangeEvent($event, data)"></nz-year-picker>
+        <!-- 选择开始~结束-日期 -->
+        <nz-range-picker 
+          *ngIf="data.type == 'date-range'"
+          [(ngModel)]="data.value"
+          [nzDisabled]="data.disabled != undefined ? data.disabled : disabledForm"
+          [nzPlaceHolder]="data.placeholder ? data.placeholder : '请选择'+data.text"
+          (ngModelChange)="modelChangeEvent($event, data)"></nz-range-picker>
+        <!-- group(任意)组合 -->
+        <div class="select-group-wrap"
+          *ngIf="data.type == 'group'">
+          <div class="group-container">
+            <span 
+              class="group-item-wrap"
+              *ngFor="let groupItem of data.group"
+              [ngClass]="'select-group-'+data.group.length"
+              >
+              <input  nz-input 
+                *ngIf="!groupItem.type || groupItem.type == 'input'"
+                [placeholder]="groupItem.placeholder ? groupItem.placeholder : '请输入'+groupItem.text" 
+                [(ngModel)]="groupItem.value"
+                [minlength]="groupItem.minlength"
+                [maxlength]="groupItem.maxlength"
+                autocomplete="off"
+                [disabled]="data.disabled != undefined ? data.disabled : disabledForm"
+                [id]="groupItem.key"
+                (keyup)="limitKeyUp($event)" [ngClass]="data.maxWidth ? 'max' : ''">
+              
+                <!-- 单位输入 -->
+                <!-- <input   nz-input  style="width:140px; z-index: 200; position: absolute; left: 140px; top: 0px;border-right: none;border-top-right-radius: 0px; border-bottom-right-radius:0px;"
+                *ngIf="groupItem.type == 'input-unit'"
+                [placeholder]="groupItem.placeholder ? groupItem.placeholder : '请输入'+groupItem.text+'或选择'" 
+                [(ngModel)]="groupItem.value"
+                [minlength]="groupItem.minlength"
+                [maxlength]="groupItem.maxlength"
+                [disabled]="data.disabled != undefined ? data.disabled : disabledForm"
+                [id]="groupItem.key"
+                (keyup)="limitKeyUp($event)" [ngClass]="data.maxWidth ? 'max' : ''">
+              <input nz-input 
+                *ngIf="groupItem.type == 'password'"
+                type="password"
+                [placeholder]="groupItem.placeholder ? groupItem.placeholder : '请输入'+groupItem.text" 
+                [(ngModel)]="groupItem.value"
+                [minlength]="groupItem.minlength"
+                [maxlength]="groupItem.maxlength"
+                [disabled]="data.disabled != undefined ? data.disabled : disabledForm"
+                [id]="data.key"
+                (keyup)="limitKeyUp($event)" [ngClass]="data.maxWidth ? 'max' : ''">
+              <nz-select  class="custom-form-select"
+                *ngIf="groupItem.type == 'select'"
+                [(ngModel)]="groupItem.value"
+                [nzDisabled]="data.disabled != undefined ? data.disabled : disabledForm"
+                [nzShowSearch]="data.nzShowSearch"
+                [nzAllowClear]="data.nzAllowClear"
+                [nzNotFoundContent]="data.nzNotFoundContent"
+                (ngModelChange)="modelChangeEvent($event, groupItem)"
+                [nzPlaceHolder]="groupItem.placeholder ? groupItem.placeholder : '请选择'+groupItem.text">
+                <nz-option
+                  *ngFor="let option of groupItem.options;let opt = index;"
+                  [nzValue]="option.value" [nzLabel]="option.text"
+                  ></nz-option>
+              </nz-select> -->
+
+              <!-- 单位选择 -->
+              <!-- <nz-select style="
+                width: 170px;
+                position: absolute;
+                left: 177px;
+                top: 0px;"  
+                class="custom-form-select"
+                *ngIf="groupItem.type == 'select-unit'"
+                [(ngModel)]="groupItem.value"
+                [nzDisabled]="data.disabled != undefined ? data.disabled : disabledForm"
+                nzShowSearch 
+                nzAllowClear
+                nzMode="tags"
+                [nzNotFoundContent]="data.nzNotFoundContent"
+                (ngModelChange)="modelChangeEvent($event, groupItem)"
+                [nzPlaceHolder] = ""
+                nzMaxMultipleCount = 1
+                >
+                <nz-option
+                  *ngFor="let option of groupItem.options;let opt = index;"
+                  [nzValue]="option.value" [nzLabel]="option.text"
+                  ></nz-option>
+              </nz-select> -->
+
+              <!-- 2019年3月28日11:38:38 新增可输入的下拉框 -->
+              <nz-input-group style="
+              width: 170px;
+              position: absolute;
+              left: 177px;
+              top: 0px;"  
+              [nzAddOnAfter]="addOnAfterTemplate" *ngIf="groupItem.type == 'select-unit'">
+                <input type="text" nz-input 
+                [(ngModel)]="groupItem.value" 
+                [placeholder]="groupItem.placeholder ? groupItem.placeholder : '请输入'+groupItem.text" 
+                [id]="groupItem.key"
+                nzShowSearch 
+                style="width: 140px;" 
+                nzAllowClear
+                />
+              </nz-input-group>
+              <ng-template #addOnAfterTemplate>
+                <nz-select style="width: 30px;" 
+                *ngIf="groupItem.type == 'select-unit'"
+                [(ngModel)]="status.selectvalue"
+               
+                [nzDropdownStyle]="{ 'width': '170px','position':'relative','left':'-140px'}" 
+                nzDropdownMatchSelectWidth
+                (ngModelChange)="selectChangeEvent($event, groupItem)"
+                >
+                <nz-option
+                  *ngFor="let option of groupItem.options;let opt = index;"
+                  [nzValue]="option.value" [nzLabel]="option.text"
+                  ></nz-option>
+              </nz-select>
+
+              </ng-template>
+            </span>
+          </div>
+        </div>
+        <!-- 下拉组合 -->
+        <div class="select-group-wrap"
+          *ngIf="data.type == 'select-group'">
+          <div class="group-container">
+            <nz-select  class="custom-form-select"
+              [ngClass]="'select-group-'+data.groupOptions.length"
+              *ngFor="let groupItem of data.groupOptions; let groupIdx=index;"
+              [(ngModel)]="groupItem.value"
+              [nzDisabled]="data.disabled != undefined ? data.disabled : disabledForm"
+              [nzShowSearch]="data.nzShowSearch"
+              [nzAllowClear]="data.nzAllowClear"
+              [nzNotFoundContent]="data.nzNotFoundContent"
+              (ngModelChange)="modelChangeEvent($event, data, groupIdx)"
+              [nzPlaceHolder]="groupItem.placeholder ? groupItem.placeholder : '请选择'+groupItem.text">
+              <nz-option
+                *ngFor="let option of groupItem.options;let opt = index;"
+                [nzValue]="option.value" [nzLabel]="option.text"
+                ></nz-option>
+            </nz-select>
+          </div>
+        </div>
+        <!-- 下拉联动(暂未开发) -->
+        <!-- 多选框(组) -->
+        <nz-checkbox-group 
+          *ngIf="data.type == 'checkbox-group'"
+          [nzDisabled]="data.disabled != undefined ? data.disabled : disabledForm"
+          (ngModelChange)="checkboxChangeEvent(data)"
+          [(ngModel)]="data.checkboxGroup"></nz-checkbox-group>
+        <!-- 单选框(组) -->
+        <nz-radio-group 
+          *ngIf="data.type == 'radiobox-group'"
+          [(ngModel)]="data.value">
+          <span *ngIf="!data.dataArray">
+            <label nz-radio 
+              [nzDisabled]="data.disabled != undefined ? data.disabled : disabledForm"
+              *ngFor="let radiobox of data.radioboxGroup"
+              [nzValue]="radiobox.value">{{radiobox.label}}</label>
+          </span>
+          <span *ngIf="data.dataArray == 'row'">
+            <label nz-radio 
+              [nzDisabled]="data.disabled != undefined ? data.disabled : disabledForm"
+              style="display: block;line-height: 40px;"
+              *ngFor="let radiobox of data.radioboxGroup"
+              [nzValue]="radiobox.value">
+              {{radiobox.label}}
+              <label *ngIf="radiobox.textRemark" style="color:#F00;">{{radiobox.textRemark}}</label>
+            </label>
+          </span>
+        </nz-radio-group>
+        
+        <!-- 上传 -->
+        <nag-file-uploader #fileUploader style="display:none" 
+          *ngIf="(data.type == 'upload-image' || data.type == 'upload-file' || data.type == 'upload-file-progress') && data.isCreate != false"
+          [autoUpload]="true" 
+          [fileHost]="fileHost"
+          [flowFiles]="status.flowFiles" 
+          [multiple]="false"
+          (onStart)="fileUploadStart($event, data)"
+          (onSuccess)="fileUploadSuccess($event, data)"
+        ></nag-file-uploader>
+        <!-- 图片上传(按钮样式) -->
+        <div class="upload-image-wrap"
+          *ngIf="data.type == 'upload-image'">
+          <div class="upload-image">
+            <label class="lab-tip">点击上传</label>
+            <span class="thumb-wrap" *ngIf="data.value">
+              <img [src]="data.value" class="upload-thumb" />
+            </span>
+            <input class="inp-upload" type="file" [disabled]="disabledForm" (change)="uploadFileChange($event, data)" />
+          </div>
+        </div>
+        <!-- 文件上传(按钮样式) -->
+        <div class="upload-file-wrap min"
+          *ngIf="data.type == 'upload-file' && data.isCreate != false ">
+          <div class="upload-file">
+            <span class="file-name">{{data.value || '选择本地文件'}}</span>
+            <button nz-button nzType="primary" [nzSize]="'small'" class="btn-file-choose" [disabled]="disabledForm">
+              <i nz-icon type="plus"></i>选择
+            </button>
+            <input type="file" class="opacity-file" (change)="uploadFileChange($event, data)" [disabled]="disabledForm"/>
+          </div>
+        </div>
+        <!-- 文件上传+进度(按钮样式) -->
+        <div class="upload-file-progress-wrap"
+          *ngIf="data.type == 'upload-file-progress'">
+          <div class="content-item">
+            <button nz-button nzType="default" [disabled]="disabledForm">选择文件并上传</button>
+            <input type="file" class="upload-file-inp" [disabled]="disabledForm" (change)="uploadFileChange($event, data)" />
+          
+            <label class="value-text" *ngIf="data.valueText">{{data.valueText}}</label>
+          </div>
+          <div class="content-item full" *ngIf="data.value">
+            <div class="upload-file-title">
+              <i nz-icon type="paper-clip" theme="outline"></i>
+              {{data.value}}
+              <a href="javascript:;" class="btn-del-file" title="删除" (click)="removeFile(data)">X</a>
+            </div>
+            <div class="upload-file-progress">
+              <div class="upload-file-name">
+                {{data.value}}
+                （上传进度{{data.progress || 0}}%）
+              </div>
+              <nz-progress 
+                [nzPercent]="data.progress || 0" 
+                [nzStatus]="data.progress < 100 ? 'active' : 'success'" 
+                [nzShowInfo]="false"></nz-progress>
+            </div>
+          </div>
+        </div>
+        <!-- 必填标识 -->
+        <i class="require"
+          [ngClass]="data.requireIconType"
+          *ngIf="data.require && data.type != 'text'">*</i>
+        <!-- 分割线 -->
+        <i class="split-line" *ngIf="data.type == 'split-line'"></i>
+      </span>
+    </div>
+  </div>
+
+  <ng-content select="[name=form-child]"></ng-content>
+</div>

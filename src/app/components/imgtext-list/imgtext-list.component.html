@@ -1,0 +1,41 @@
+<!-- 
+  图文列表
+  @author: AndyPan
+  @createdate: 2018年11月28日13:41:09
+ -->
+
+<div class="imgtext-list" [ngClass]="className">
+  <div class="imgtext-list-empty"
+    *ngIf="modelData.length == 0">
+    {{emptyText != false && emptyText != 'false' ? emptyText : ''}}
+    <!-- 自定义(为空提示)插槽结构 -->
+    <ng-content select="[name=emptytip-child]"></ng-content>
+  </div>
+  <div class="imgtext-list-wrap"
+    *ngIf="modelData.length > 0">
+    <a href="javascript:;" class="imgtext-item"
+      [ngClass]="itemType"
+      *ngFor="let dataItem of modelData;let idx = index;"
+      (click)="jumpTo($event, dataItem)">
+    <!-- <a href="{{'/car-model?carModelId='+dataItem.id}}" class="imgtext-item"
+      [ngClass]="itemType"
+      *ngFor="let dataItem of modelData;let idx = index;"> -->
+      <span class="imgtext-thumb-wrap">
+        <img [src]="dataItem.url || '../../../assets/images/car-thumb/car-default.png'" class="thumb" />
+      </span>
+      <span class="imgtext-word-wrap">
+        <label class="word-item item-name" [title]="dataItem.name">{{dataItem.name}}</label>
+        <label class="word-item item-number">编号：{{dataItem.code}}</label>
+        <label class="word-item item-date">年份：{{dataItem.sopTime |  date : "yyyy-MM"}}</label>
+      </span>
+      <span class="item-tools">
+        <i nz-icon class="icon-tools-item" 
+          *ngFor="let tool of tools"
+          (click)="toolClickEvent(tool, dataItem,$event)"
+          [type]="tool.type" [ngClass]="{'routed': dataItem.isTemplate&&tool.type=='pushpin'}" [title]="tool.text"></i>
+      </span>
+    </a>
+  </div>
+  <!-- 自定义插槽结构 -->
+  <ng-content select="[name=imgtext-child]"></ng-content>
+</div>

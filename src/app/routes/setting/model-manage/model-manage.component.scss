@@ -1,0 +1,41 @@
+::ng-deep .tbody {
+  .ant-btn {
+    background-color: #F7F7F7;
+    border: none;
+
+    &:hover {
+      background: #e6f7ff;
+    }
+  }
+
+  .ant-table-tbody>tr:hover {
+    background: #e6f7ff;
+  }
+
+  .link {
+    width: 25px;
+    height: 20px;
+    position: relative;
+    background-image: url('./../../../../assets/images/car-model/modeltool.png');
+    background-position: 65% 1%;
+    cursor: pointer;
+  }
+
+  .link-change {
+    width: 25px;
+    height: 20px;
+    position: relative;
+    background-image: url('./../../../../assets/images/car-model/modeltool.png');
+    background-position: 65% 19%;
+    cursor: pointer;
+  }
+
+  .anticon-link {
+    font-size: 16px;
+    transform:rotate(90deg);
+    -ms-transform:rotate(90deg); 	/* IE 9 */
+    -moz-transform:rotate(90deg); 	/* Firefox */
+    -webkit-transform:rotate(90deg); /* Safari 和 Chrome */
+    -o-transform:rotate(90deg); 	/* Opera */
+  }
+}

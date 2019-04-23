@@ -1,0 +1,320 @@
+/**
+ * 文件库页面模板-scss
+ * @author AndyPan
+ * @createdate 2018年11月29日15:05:05
+ */
+
+ @import '../../sass/base.scss';
+
+.file-lib-wrap{
+    width: $CommonWrapWidth1;
+    margin: 0 auto;
+    height: 100%;
+    position: relative;
+    .file-lib-container{
+        position: absolute;
+        left: 0;
+        right: 0;
+        top: 62px;
+        bottom: 50px;
+        @include border-radius(5px);
+        @include box-shadow($BoxShadow);
+        background: $WhiteColor;
+        overflow: hidden;
+
+        $TreeMenuWidth: 240px;
+        $HDHeight: 60px;
+        .lib-treemenu-wrap{
+            width: $TreeMenuWidth;
+            height: 100%;
+            border-right: 1px solid $ColorD3;
+            float: left;
+            position: relative;
+
+            .tree-menu-hd{
+                height: $HDHeight;
+                line-height: $HDHeight;
+                padding-left: 18px;
+                border-bottom: 1px solid $ColorD3;
+            }
+            .tree-menu-bd{
+                position: absolute;
+                top: $HDHeight;
+                left: 0;
+                right: 0;
+                bottom: 0;
+                overflow: hidden;
+                overflow-y: auto;
+                @include scrollbar();
+
+                .menu-item-database{
+                    display: block;
+                    line-height: 53px;
+                    padding-left: 36px;
+                    border-bottom: 1px solid $ColorD3;
+                    text-decoration: none;
+                }
+            }
+        }
+        .lib-list-wrap{
+            margin-left: $TreeMenuWidth;
+            height: 100%;
+            position: relative;
+
+            .lib-list-hd{
+                height: $HDHeight;
+                line-height: $HDHeight;
+                padding-left: 20px;
+                padding-right: 20px;
+                border-bottom: 1px solid $ColorD3;
+
+                .btn-group{
+                    display: inline-block;
+                    &.disabled{
+                        .hd-btn-item{
+                            color: $ColorC;
+                            cursor: not-allowed;
+                        }
+                    }
+                    .hd-btn-item{
+                        display: inline-block;
+                        color: $PrimaryFontColor;
+                        margin-right: 30px;
+                        text-decoration: none;
+                        i{
+                            margin-right: 5px;
+                            font-weight: bold;
+                            font-size: 20px;
+                        }
+                    }
+                }
+                .btn-upload-right{
+                    float: right;
+                    margin-top: 14px;
+                }
+            }
+            .lib-list-cont{
+                position: absolute;
+                top: $HDHeight;
+                left: 0;
+                right: 0;
+                bottom: 0;
+                td{
+                    position: relative;
+
+                    &.hover{
+                        .tools{
+                            @include opacity(1);
+                        }
+                    }
+                }
+                .tools{
+                    position: absolute;
+                    top: 18px;
+                    right: 10px;
+                    background: #E6F7FF;
+                    @include opacity(0);
+                    a{
+                        margin: 0 8px;
+                        color: $PrimaryFontColor;
+                        i{
+                            font-size: 18px;
+                        }
+                        &:hover{
+                            color: $PrimaryColor;
+                        }
+                    }
+                }
+                .name-wrap{
+                    display: inline-block;
+                    width: 300px;
+                    position: relative;
+                    @include transition(all .3s ease);
+                    @include text-overflow();
+                }
+                .table-cont{
+                    position: absolute;
+                    top: 0;
+                    left: 0;
+                    right: 0;
+                    bottom: 62px;
+                    overflow: auto;
+                    @include scrollbar();
+                }
+                .pager{
+                    position: absolute;
+                    left: 0;
+                    bottom: 0;
+                    width: 100%;
+                    height: 60px;
+                    padding-top: 9px;
+                    border-top: 1px solid $ColorD3;
+                }
+            }
+        }
+    }
+}
+
+::ng-deep .ant-spin-nested-loading{
+    height: 100%;
+    .ant-spin-blur{
+        height: 100%;
+    }
+}
+
+
+:host ::ng-deep .ant-tree {
+    overflow: hidden;
+    padding-left: 12px;
+    // margin: 0 -24px;
+    // padding: 0 24px;
+
+}
+
+$nodeHeight: 40px;
+:host ::ng-deep .ant-tree li {
+    padding: 4px 0 0 0;
+    position: relative;
+    span.ant-tree-switcher{
+        height: $nodeHeight;
+        line-height: $nodeHeight + 4px;
+        &.ant-tree-switcher_close, &.ant-tree-switcher_open {
+            .ng-star-inserted{
+                font-size: 20px;
+            }
+        }
+    }
+}
+
+.custom-node {
+    cursor: pointer;
+    line-height: $nodeHeight;
+    margin-left: 4px;
+    display: inline-block;
+    margin: 0 -1000px;
+    padding: 0 1000px;
+    color: $PrimaryFontColor;
+    .folder-tools{
+        position: absolute;
+        right: 0px;
+        top: 5px;
+        @include transition(all .3s ease);
+        @include opacity(0);
+
+        i{
+            margin-right: 18px;
+        }
+    }
+
+    &:hover, &.hover{
+        .folder-tools{
+            @include opacity(1);
+        }
+    }
+    
+    &.active {
+        background: $AuxiliaryColor;
+        // color: #fff;
+        .folder-tools{
+            @include opacity(1);
+        }
+    }
+}
+
+
+.file-name, .folder-name {
+    margin-left: 4px;
+}
+
+.file-desc, .folder-desc {
+    padding: 0 8px;
+    display: inline-block;
+    background: #87CEFF;
+    color: #FFFFFF;
+    position: relative;
+    left: 12px;
+}
+
+.preview-iframe{
+    border: 0;
+    width: 100%;
+    height: 500px;
+}
+
+.qr-code-wrap{
+    width: 80%;
+    margin: 0 auto;
+    text-align: center;
+    .qr-code-item{
+        display: inline-block;
+        width: 256px;
+        margin: 10px 20px;
+        .qr-code-text{
+            display: inline-block;
+            width: 100%;
+            height: 30px;
+            line-height: 30px;
+            text-align: left;
+            @include text-overflow();
+        }
+    }
+}
+
+
+// .choose-file-wrap{
+//     $h: 44px;
+//     height: $h;
+//     border: 1px solid #ccc;
+//     position: relative;
+//     overflow: hidden;
+//     .opacity-file{
+//         position: absolute;
+//         width: 100%;
+//         height: 100%;
+//         z-index: 10;
+//         @include opacity(0);
+//     }
+//     .file-name{
+//         display: inline-block;
+//         height: $h;
+//         line-height: $h - 2px;
+//         font-size: 12px;
+//         position: absolute;
+//         top: 0;
+//         left: 5px;
+//         right: 100px;
+//         white-space: nowrap;
+//         overflow: hidden;
+//         text-overflow: ellipsis;
+//     }
+//     .btn-file-choose{
+//         float: right;
+//         margin: 5px;
+//     }
+// }
+// .tip-msg{
+//     line-height: 30px;
+//     margin: 5px 10px;
+//     text-align: left;
+//     color: #f00;
+//     font-size: 14px;
+// }
+
+// .percent-wrap{
+//     text-align: center;
+// }
+
+// .upload-desc{
+//     line-height: 30px;
+//     margin: 5px auto;
+//     text-align: left;
+//     color: #ccc;
+//     font-size: 14px;
+// }
+// .upload-remark{
+//     line-height: 30px;
+//     margin: 5px auto;
+//     text-align: left;
+//     color: #f00;
+//     font-size: 14px;
+// }

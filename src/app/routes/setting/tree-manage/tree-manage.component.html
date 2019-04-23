@@ -1,0 +1,138 @@
+<!-- 
+  结构树管理
+  @author: AndyPan
+  @createdata: 2018年11月30日15:18:16
+ -->
+
+<div class="common-main-wrap tree-manage-main">
+  <div class="common-main-hd">
+    <span class="common-bread-crumb">
+      <nz-breadcrumb nzSeparator=">">
+        <nz-breadcrumb-item>
+          设置
+        </nz-breadcrumb-item>
+        <nz-breadcrumb-item>
+          基本信息
+        </nz-breadcrumb-item>
+        <nz-breadcrumb-item>
+          结构树管理
+        </nz-breadcrumb-item>
+      </nz-breadcrumb>
+    </span>
+  </div>
+  <div class="common-main-cont">
+    <div class="tree-manage-empty" *ngIf="!status.treeNodesStatus">
+      请选择一个模板作为基础结构树
+      <button nz-button nzType="primary" (click)="chooseTemplate()">选择</button>
+    </div>
+    <div class="tree-manage-wrap" *ngIf="status.treeNodesStatus">
+      <div class="tree-hd">
+        <span class="tree-hd-title" (click)="refresh()">设置结构</span>
+        <span class="tree-hd-tool" *ngIf="status.pageAuthorty.Create">
+          <button nz-button 
+            [nzType]="'primary'" 
+            [nzSize]="'small'" 
+            [disabled]="status.btnDisabled"
+            (click)="addCatalog()">
+            添加结构
+          </button>
+        </span>
+      </div>
+      <div class="tree-bd">
+        <components-custom-drag #customDrag
+          [isSetLeft]="false"
+          [dragBeginEvent]="dragBeginEvent"
+          [dragMoveEvent]="dragMoveEvent"
+          [dragEndEvent]="dragEndEvent.bind(this)">
+          <div name="drag-child">
+            <nz-spin [nzTip]="operationStatus.loadingTip" 
+              [nzSpinning]="operationStatus.isLoading"
+              style="width: 100%;line-height: 100px;text-align: center;">
+              <component-tree-edit
+                [treeNodes]="status.treeNodes"
+                (onAddSave)="onAddSave($event)"
+                (onEditSave)="onEditSave($event)"
+                (onDeleteSave)="onDeleteSave($event)"
+                (onSelected)="onSelected($event)"
+                (onUnSelected)="onUnSelected($event)"
+                (onLoaded)="onTreeLoaded($event)"
+                *ngIf="status.treeNodes"
+                #treeEdit></component-tree-edit>
+            </nz-spin>
+          </div>
+        </components-custom-drag>
+      </div>
+      <div class="tree-ft">
+        <span class="tree-ft-tool">
+          <!-- <button nz-button 
+            [nzType]="'primary'" 
+            [nzSize]="'small'"
+            (click)="saveTree()">
+            保存
+          </button> -->
+          <!-- 暂时禁用，预计下一版本开发 -->
+          <button nz-button  hidden
+            [nzType]="'primary'" 
+            [nzSize]="'small'"
+            (click)="importExcel()">
+            导入excel模板
+          </button>
+          <button nz-button 
+            [nzType]="'default'" 
+            [nzSize]="'small'"
+            (click)="resetTree()">
+            重置
+          </button>
+        </span>
+      </div>
+      <div class="tree-model-type">
+        <nz-radio-group 
+          [(ngModel)]="status.treeModelInfo[0].value">
+          <label nz-radio 
+            style="display: block;line-height: 40px;"
+            *ngFor="let radiobox of status.treeModelInfo[0].radioboxGroup"
+            [nzDisabled]="radiobox.disabled"
+            [nzValue]="radiobox.value">{{radiobox.label}}</label>
+        </nz-radio-group>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- 弹出框 -->
+<nz-modal [(nzVisible)]="operationStatus.modal.operationModalStatus" [nzContent]="addModalContent"
+  [nzFooter]="operationStatus.modal.isShowModalFooter ? addModalFooter : null"
+  (nzOnCancel)="operationCloseModal('operationModalStatus')"
+  [nzWidth]="600"
+  [nzMaskClosable]="false"
+  [nzTitle]="operationStatus.modal.operationModalTitle">
+  <ng-template #addModalContent>
+    <nz-spin nzTip="绑定中，请稍等..." 
+      [nzSpinning]="operationStatus.modelDisabled">
+      <components-custom-forms 
+        [formData]="operationStatus.modal.customFormInfoModel"
+        [disabledForm]="operationStatus.modelDisabled"
+        (onUploadFileChange)="uploadFileChange($event)"
+        (onUploadFileSuccess)="uploadFileSuccess($event)"
+        (onUploadFileRemove)="uploadFileRemove($event)"
+        #customForms>
+      </components-custom-forms>
+    </nz-spin>
+  </ng-template>
+  <ng-template #addModalFooter>
+    <button nz-button 
+      *ngIf="operationStatus.modal.sureButton"
+      [nzType]="operationStatus.modal.sureButton.type || 'primary'"
+      [disabled]="operationStatus.modelDisabled"
+      (click)="operationSubmitModal()">
+      {{operationStatus.modelDisabled ? (operationStatus.modelDisabled == 1 ? operationStatus.modal.sureButton.text : operationStatus.modal.sureButton.submitText) : operationStatus.modal.sureButton.text}}
+    </button>
+    <button nz-button 
+      *ngIf="operationStatus.modal.resetButton"
+      [nzType]="operationStatus.modal.resetButton.type || 'default'"
+      [disabled]="operationStatus.modelDisabled"
+      (click)="operationResetModal()">
+      {{operationStatus.modelDisabled ? operationStatus.modal.resetButton.submitText : operationStatus.modal.resetButton.text}}
+    </button>
+  </ng-template>
+</nz-modal>

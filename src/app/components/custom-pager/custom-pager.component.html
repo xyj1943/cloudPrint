@@ -1,0 +1,33 @@
+<!-- 
+  重写分页
+  @author: AndyPan
+  @createdate: 2018年11月28日16:08:28
+ -->
+
+<div class="form-modal" [ngClass]="className">
+  <div class="pager-wrap">
+    <span class="quick-jumper"
+      *ngIf="showQuickJumper">
+      跳转到
+      <input nz-input (keyup)="jumpTo($event)">
+      页
+    </span>
+    <a class="pager-item-custom"
+      (click)="pageIndexChangeEvent(1)"
+      [ngClass]="pageIndex == 1 ? 'disabled' : ''">首页</a>
+    <nz-pagination [(nzPageIndex)]="pageIndex" 
+      [nzTotal]="totalCount"
+      [nzPageSize]="pageSize"
+      [nzItemRender]="ItemRenderTemplate"
+      (nzPageIndexChange)="pageIndexChangeEvent($event)"
+      [nzSize]="'small'"></nz-pagination>
+    <ng-template #ItemRenderTemplate let-page="page" let-type>
+      <a *ngIf="type==='pre'">上页</a>
+      <a *ngIf="type==='next'">下页</a>
+      {{page}}
+    </ng-template>
+    <a class="pager-item-custom"
+      (click)="pageIndexChangeEvent(0)"
+      [ngClass]="pageIndex == totalPages ? 'disabled' : ''">尾页</a>
+  </div>
+</div>
